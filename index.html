@@ -1,0 +1,683 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,height=device-height,initial-scale=1,maximum-scale=1,viewport-fit=cover,user-scalable=no">
+<meta name="theme-color" content="#101e23"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="./manifest.webmanifest"><link rel="apple-touch-icon" href="./icons/icon-192.png">
+<title>GENESIS TO THE STARS — The First Dawn</title>
+<style>
+
+:root{--bg:#071217;--panel:rgba(10,25,31,.92);--panel2:rgba(20,42,46,.92);--edge:rgba(165,214,195,.22);--gold:#eac892;--aqua:#7bdfc3;--text:#e7f1ea;--muted:#a3bdb7;--red:#ff827d;--shadow:0 14px 55px #0009}
+*{box-sizing:border-box}html,body{padding:0;margin:0;width:100%;height:100%;overflow:hidden;background:var(--bg);color:var(--text);font-family:Outfit,system-ui,-apple-system,sans-serif;user-select:none;-webkit-user-select:none}button,input,select{font:inherit}button{cursor:pointer;color:inherit}button:disabled{opacity:.36;cursor:not-allowed}button:focus-visible{outline:2px solid var(--aqua);outline-offset:2px}canvas{display:block}#view{width:100%;height:100%;touch-action:none;background:#092128}#vignette{pointer-events:none;position:fixed;inset:0;background:radial-gradient(ellipse at 50% 47%,transparent 46%,#0110168a 100%);z-index:2}#grain{pointer-events:none;position:fixed;inset:0;z-index:3;opacity:.12;background-image:url('data:image/svg+xml,%3Csvg viewBox="0 0 170 170" xmlns="http://www.w3.org/2000/svg"%3E%3Cfilter id="n"%3E%3CfeTurbulence type="fractalNoise" baseFrequency="0.72" numOctaves="3" stitchTiles="stitch"/%3E%3C/filter%3E%3Crect width="100%25" height="100%25" filter="url(%23n)" opacity="0.45"/%3E%3C/svg%3E')}
+.hidden{display:none!important} .eyebrow{font-size:10px;letter-spacing:.22em;text-transform:uppercase;color:var(--aqua);font-weight:800}.serif{font-family:Cinzel,Georgia,serif}.muted{color:var(--muted)}.tiny{font-size:11px}.sub{font-size:12px}.strong{font-weight:750}.ui{z-index:7;position:fixed}.glass{border:1px solid var(--edge);background:linear-gradient(138deg,rgba(21,42,46,.94),rgba(8,24,29,.94));box-shadow:var(--shadow);backdrop-filter:blur(17px);-webkit-backdrop-filter:blur(17px);border-radius:15px}
+#hudTop{left:14px;right:14px;top:12px;height:64px;display:flex;align-items:center;gap:10px;pointer-events:none}#hudTop>*{pointer-events:auto}.brand{width:226px;display:flex;align-items:center;gap:9px;padding:8px 12px;height:100%}.seal{width:42px;height:42px;flex:0 0 42px;display:grid;place-items:center;background:radial-gradient(circle,#254c49,#112a33);border:1px solid #a8dfb570;border-radius:13px;color:var(--gold);font-size:24px}.brandName{font-size:15px;line-height:1.1;font-weight:700;letter-spacing:.08em;font-family:Cinzel,serif}.brandTag{font-size:10px;letter-spacing:.12em;color:var(--muted);margin-top:4px}.topStats{height:100%;display:flex;gap:8px;align-items:center;padding:9px 15px;flex:1;max-width:650px}.stat{min-width:76px;flex:1}.stat b{font-size:16px;font-weight:750;display:block}.stat label{display:block;text-transform:uppercase;letter-spacing:.14em;font-size:9px;color:var(--muted)}.topActions{display:flex;gap:6px;margin-left:auto}.miniBtn{height:40px;min-width:40px;padding:0 11px;border:1px solid var(--edge);border-radius:11px;background:#173038e8;color:var(--text);font-size:13px;font-weight:800}.miniBtn:hover{background:#28514e}.miniBtn.on{border-color:#87e8c6;color:var(--aqua)}
+#objective{top:89px;left:14px;width:276px;padding:15px 16px;pointer-events:auto}#objective h3{font-size:16px;margin:7px 0 6px;font-family:Cinzel,Georgia,serif;color:#f4e7c8}#objective p{font-size:12px;line-height:1.5;margin:0 0 11px;color:#d6e4de}.progress{height:5px;background:#37504c;border-radius:5px;overflow:hidden}.progress>span{display:block;height:100%;background:linear-gradient(90deg,#52b7a2,#f5c67e);transition:width .25s}#missionMeta{margin-top:7px;display:flex;justify-content:space-between;font-size:10px;color:var(--muted)}
+#toastStack{position:fixed;top:89px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;gap:7px;align-items:center;z-index:30;pointer-events:none;width:min(360px,92vw)}.toast{background:#142c32ef;border:1px solid #8ae3bb80;box-shadow:0 8px 25px #000b;border-radius:11px;padding:10px 15px;text-align:center;font-size:12px;animation:toastin .25s ease}.toast b{color:var(--gold)}@keyframes toastin{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:translateY(0)}}
+#side{right:14px;top:89px;width:306px;max-height:calc(100% - 181px);overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;padding:16px;pointer-events:auto}#side::-webkit-scrollbar,.scroll::-webkit-scrollbar{width:4px}#side::-webkit-scrollbar-thumb,.scroll::-webkit-scrollbar-thumb{background:#42645f}.panelHead{display:flex;align-items:center;justify-content:space-between;gap:8px}.panelHead h3{margin:0;font-family:Cinzel,serif;color:#f5e6c4;font-size:16px}.iconButton{border:1px solid var(--edge);background:#1c3940;border-radius:8px;width:28px;height:28px}.speciesBanner{display:flex;gap:10px;align-items:center;margin:12px 0 13px;padding:11px;background:#0d2128aa;border:1px solid #63867e40;border-radius:12px}.speciesPortrait{flex:0 0 60px;width:60px;height:60px;border-radius:12px;background:radial-gradient(circle,#2b5450,#142e34);position:relative;overflow:hidden}.speciesPortrait canvas{width:100%;height:100%}.speciesBanner strong{display:block;font-size:15px}.speciesBanner small{font-size:11px;color:var(--muted)}.meters{display:grid;grid-template-columns:1fr 1fr;gap:8px}.meter{padding:8px 10px;border:1px solid #65867d38;background:#122b30;border-radius:10px}.meter .value{font-size:17px;color:var(--text);font-weight:800}.meter small{font-size:10px;color:var(--muted);display:block;margin-top:1px}.meter b{font-size:10px;color:var(--aqua);font-weight:700}.sectionLine{display:flex;justify-content:space-between;align-items:center;margin:17px 0 9px}.sectionLine b{font-size:11px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold)}.sectionLine span{font-size:11px;color:var(--aqua)}.geneGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}.gene{padding:10px;text-align:left;min-height:84px;background:linear-gradient(140deg,#1d3b41,#10292f);border:1px solid #789f8757;border-radius:10px;transition:background .16s}.gene:hover:not(:disabled){background:#31554e;border-color:#e1c78c}.gene .geneTop{display:flex;justify-content:space-between;align-items:start;gap:3px}.gene .geneIcon{font-size:23px}.gene .cost{font-size:10px;color:var(--gold);font-weight:800}.gene strong{font-size:11px;display:block;margin:6px 0 2px}.gene small{font-size:10px;line-height:1.2;color:#b4c8c0;display:block}.gene.unavailable{opacity:.4}.wideBtn{width:100%;border:1px solid #d4b8817a;padding:11px 12px;border-radius:10px;background:linear-gradient(115deg,#5b674e,#344e43);font-size:12px;font-weight:800;margin-top:9px}.wideBtn.primary{color:#102425;background:linear-gradient(115deg,#f0d9a5,#b6dcb9);border:none}.wideBtn.alt{border:1px solid #648c83;background:#183942}.wideBtn:hover:not(:disabled){filter:brightness(1.1)}.smallInfo{font-size:11px;line-height:1.45;color:var(--muted)}
+#bottom{left:50%;bottom:16px;transform:translateX(-50%);padding:9px 12px;display:flex;gap:10px;align-items:center;min-height:62px;pointer-events:auto}#bottom .key{min-width:42px;height:40px;border:1px solid #8fc0a354;border-radius:9px;background:#1b3940;display:flex;align-items:center;justify-content:center;flex-direction:column;font-weight:800;font-size:12px}#bottom .key small{font-size:9px;font-weight:600;color:#aecdc3;margin-top:2px}#bottom .key.hot{background:#577057;border-color:#ddc18e;color:#fff3d5}.divider{height:32px;width:1px;background:#6c89854a}.modeTabs{display:flex;gap:5px}.modeTabs button{padding:10px 12px;border-radius:9px;border:1px solid #658d8052;background:#1a363b;font-size:12px;font-weight:700}.modeTabs button.sel{background:linear-gradient(125deg,#c0b582,#437769);color:#071719}
+#log{left:14px;bottom:92px;width:286px;max-height:142px;padding:12px 13px;overflow:hidden;pointer-events:auto}#log .entry{font-size:11px;line-height:1.36;color:#bdd0c7;border-top:1px solid #76988a25;padding-top:6px;margin-top:6px}#log .entry b{color:var(--gold)}#log .entry:first-of-type{border:0;padding-top:0}
+#mapButton{position:fixed;bottom:96px;right:330px;z-index:7;padding:11px 13px;border:1px solid #9cd2ba78;background:#17363be9;border-radius:10px;font-weight:700;font-size:12px}
+#touch{display:none;position:fixed;z-index:10;bottom:14px;left:0;right:0;pointer-events:none;padding:0 20px;justify-content:space-between;align-items:end}.joyArea{pointer-events:auto;width:136px;height:136px;border-radius:50%;border:2px solid #b4e0c269;background:#132d3899;position:relative;touch-action:none;box-shadow:inset 0 0 25px #071417c7}.joyArea:before,.joyArea:after{content:"";position:absolute;background:#b8ddc431;left:50%;top:50%;transform:translate(-50%,-50%)}.joyArea:before{width:1px;height:80%}.joyArea:after{height:1px;width:80%}.joyKnob{width:60px;height:60px;border-radius:50%;background:radial-gradient(circle at 35% 30%,#668f82,#23454b);border:2px solid #dcf1d6a3;box-shadow:0 3px 17px #000a;position:absolute;left:calc(50% - 30px);top:calc(50% - 30px);pointer-events:none}.touchActions{display:flex;gap:8px;align-items:end;pointer-events:auto}.touchCol{display:flex;flex-direction:column;gap:8px}.touchBtn{width:67px;height:67px;border-radius:50%;border:2px solid #dcdaa57a;background:#294a4ac9;display:grid;place-items:center;text-align:center;font-size:12px;font-weight:800;line-height:1.1;touch-action:none}.touchBtn small{font-size:9px;color:#c3d9d2}.touchBtn.main{width:78px;height:78px;background:#6b6843e0;border-color:#f5dfa4;box-shadow:0 0 16px #efd88b38}.touchBtn:active,.touchBtn.pressed{transform:scale(.94);filter:brightness(1.3)}
+#screen{position:fixed;inset:0;z-index:50;background:radial-gradient(circle at 76% 12%,#3554503b,transparent 36%),linear-gradient(120deg,rgba(4,20,26,.96),rgba(5,16,20,.98));display:flex;align-items:center;justify-content:center;padding:18px;overflow-y:auto}#screen .starLayer{position:absolute;inset:0;pointer-events:none;overflow:hidden;background-image:radial-gradient(1px 1px at 20% 26%,#fff9,transparent),radial-gradient(2px 2px at 80% 16%,#dfefb1a6,transparent),radial-gradient(2px 2px at 48% 76%,#fff9,transparent),radial-gradient(1px 1px at 68% 48%,#cdfadd,transparent);background-size:230px 221px,370px 310px,430px 380px,250px 230px;opacity:.5}#screenCard{position:relative;z-index:1;width:min(1020px,100%);display:grid;grid-template-columns:1.04fr .96fr;gap:0;border:1px solid #bdcfa472;background:#0b2027ef;border-radius:24px;overflow:hidden;box-shadow:0 20px 90px #000e}#heroArt{min-height:570px;position:relative;overflow:hidden;background:radial-gradient(ellipse at 50% 24%,#395c5b,#122b33 55%,#07151e)}#heroArt canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}#heroArt:after{content:"";position:absolute;inset:0;background:linear-gradient(0deg,#06171e 5%,transparent 36%,#08202824 85%);pointer-events:none}.heroText{position:absolute;z-index:2;left:36px;right:20px;bottom:36px}.heroText h1{font-family:Cinzel,serif;line-height:1.04;font-size:clamp(35px,4vw,58px);letter-spacing:.018em;font-weight:600;margin:11px 0 12px;color:#f8ebcb;text-shadow:0 3px 16px #0009}.heroText p{max-width:400px;color:#d1e2dc;font-size:13px;line-height:1.6}.setup{padding:34px;align-self:center}.setup h2{font-family:Cinzel,serif;color:#f4e3c0;font-size:22px;margin:11px 0 8px}.setup p{color:var(--muted);line-height:1.5;font-size:13px;margin:0 0 20px}.inputGroup{display:flex;gap:8px;align-items:center;margin:11px 0}.inputGroup>label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:#bcd6ca;flex:1}.inputGroup input,.inputGroup select{font-size:13px;color:#e8f0e8;background:#153039;border:1px solid #66847b;border-radius:9px;padding:9px;min-width:0;width:190px}.selectTitle{font-weight:700;font-size:12px;color:#f4e8cb;letter-spacing:.07em;margin:17px 0 9px}.startChoices{display:grid;grid-template-columns:1fr 1fr;gap:8px}.startChoice{border-radius:12px;border:1px solid #5d817969;background:#19363b9c;padding:11px;text-align:left;min-height:104px}.startChoice.chosen{border-color:#f3d59c;background:#375249;box-shadow:inset 0 0 0 1px #dfc48b70}.startChoice b{display:block;font-size:13px;margin:7px 0 3px}.startChoice small{font-size:10px;color:#c2d4cf;line-height:1.38;display:block}.startChoice .pict{font-size:22px}.setupBtns{margin-top:21px;display:flex;flex-direction:column;gap:7px}.setupBtns button{border-radius:10px;border:1px solid #72998a;padding:13px;font-weight:800;font-size:13px;background:#1d3e42}.setupBtns .start{color:#112626;background:linear-gradient(115deg,#f1dfb4,#9fceaf);border:0;letter-spacing:.1em}.smallPrint{margin-top:11px!important;font-size:10px!important;text-align:center}
+#dialogOverlay{position:fixed;inset:0;z-index:35;display:grid;place-items:center;background:#041014b8;padding:15px}#dialog{width:min(620px,98%);max-height:88vh;overflow-y:auto;padding:23px;border-radius:17px;background:linear-gradient(130deg,#17343a,#0b232a);border:1px solid #aac4a070;box-shadow:0 25px 80px #000f}#dialog h2{font-family:Cinzel,serif;color:#f0ddae;font-size:23px;margin:3px 0 8px}#dialog p{font-size:13px;line-height:1.5;color:#c4d6d0}.dialogButtons{display:flex;gap:7px;flex-wrap:wrap;margin-top:18px}.dialogButtons button{background:#32564f;border:1px solid #9cbd997c;border-radius:9px;padding:10px 14px;font-weight:750;font-size:12px}.dialogButtons button.primary{background:#d0d0a2;color:#102327;border:0}.codexGrid{display:grid;grid-template-columns:repeat(2,1fr);gap:7px}.codexCard{background:#123039;border:1px solid #6c91814f;border-radius:10px;padding:10px}.codexCard b{font-size:13px}.codexCard p{margin:5px 0 0!important;font-size:11px!important}.historyEntry{font-size:12px;line-height:1.5;padding:9px 0;border-bottom:1px solid #78978a34}.historyEntry em{color:var(--gold);font-style:normal}.miniMap{width:100%;height:210px;background:#0d272a;border-radius:12px;border:1px solid #647c6e;padding:6px}
+#rightToggle{display:none}#objectiveToggle{display:none}.goneOnMobile{}.floraGlow{color:#88e9b1}
+@media(max-width:980px){#hudTop{right:9px;left:9px;top:8px;height:51px}.brand{width:162px;padding:6px 9px}.seal{height:32px;width:32px;flex-basis:32px;font-size:18px}.brandName{font-size:11px}.brandTag{font-size:8px}.topStats{padding:5px 8px}.stat b{font-size:13px}.stat label{font-size:8px}.topActions .miniBtn{height:33px;min-width:33px;padding:0 7px;font-size:11px}#objective{left:9px;top:68px;width:224px;padding:11px}#objective h3{font-size:13px}#objective p{font-size:11px}#side{right:9px;top:68px;width:255px;max-height:calc(100% - 180px);padding:12px}.gene{min-height:76px;padding:8px}.gene .geneIcon{font-size:18px}#bottom{bottom:9px;padding:7px;gap:6px}#bottom .key{height:33px;min-width:37px;font-size:11px}#mapButton{right:270px;bottom:78px}#log{width:225px;bottom:72px}#touch{display:flex}#bottom{display:none}#mapButton{bottom:155px;right:275px}#log{bottom:70px}}
+@media(max-width:650px){#hudTop{height:49px}.brand{width:129px;flex:0 0 129px}.brandName{font-size:9px}.brandTag{font-size:7px}.topStats{padding:5px 7px;gap:5px}.stat{min-width:0}.stat b{font-size:12px}.stat label{font-size:7px;letter-spacing:.05em}.stat:nth-child(3){display:none}.topActions{gap:4px}.topActions .miniBtn{min-width:31px;height:31px;padding:0 6px;font-size:11px}#saveBtn{display:none}.stat:nth-child(2){display:none}#objective{top:65px;left:8px;width:min(218px,59vw);max-height:180px;overflow:hidden}#objective.collapsed p,#objective.collapsed .progress,#objective.collapsed #missionMeta{display:none}#objective.collapsed{max-height:55px}#objective h3{font-size:12px}#objective .eyebrow{font-size:9px}#objective p{margin:4px 0;font-size:10px}#objectiveToggle{display:block;position:absolute;right:5px;top:5px;border:0;background:transparent;color:var(--aqua);font-size:17px}#side{width:min(340px,calc(100vw - 16px));top:65px;right:8px;bottom:130px;max-height:none;z-index:21;display:none}#side.open{display:block}#rightToggle{display:block;position:fixed;z-index:11;right:9px;top:65px;border-radius:9px;background:#1b4042ea;border:1px solid #a8d5ae74;color:#e6e9d0;padding:8px 10px;font-size:12px;font-weight:800}#log{display:none}#mapButton{display:none}#touch{bottom:max(11px,env(safe-area-inset-bottom));padding:0 12px}.joyArea{width:118px;height:118px}.joyKnob{width:54px;height:54px;left:calc(50% - 27px);top:calc(50% - 27px)}.touchBtn{width:60px;height:60px}.touchBtn.main{width:72px;height:72px}.touchCol{gap:6px}.touchActions{gap:6px}#screen{padding:0;overflow-y:auto;align-items:flex-start}#screenCard{display:block;border-radius:0;border:0;min-height:100vh}#heroArt{height:225px;min-height:225px}.heroText{bottom:8px;left:22px}.heroText h1{font-size:29px;margin:4px 0}.heroText p{display:none}.setup{padding:19px 19px 30px}.setup h2{font-size:19px;margin:5px 0}.setup p{font-size:12px;margin-bottom:12px}.selectTitle{margin:11px 0 6px}.startChoice{min-height:89px;padding:9px}.startChoice b{margin:3px 0}.inputGroup{margin:7px 0}.inputGroup input,.inputGroup select{width:156px;padding:7px}.setupBtns{margin-top:12px}.setupBtns button{padding:10px}.startChoice .pict{font-size:18px}}
+@media(max-width:650px) and (orientation:landscape){#hudTop .topStats .stat:nth-child(2){display:none}#objective{top:64px;width:175px;max-height:135px}#objective.collapsed{max-height:46px}#rightToggle{top:64px}#side{top:64px;bottom:9px;width:275px}#touch{padding:0 20px;bottom:6px}.joyArea{width:106px;height:106px}.touchBtn{width:56px;height:56px}.touchBtn.main{height:65px;width:65px}#screenCard{display:grid;grid-template-columns:.8fr 1.2fr;min-height:100vh}#heroArt{min-height:100vh;height:100%}.heroText h1{font-size:21px}.setup{padding:12px 20px}.setup h2{font-size:16px}.setup p{margin-bottom:6px;font-size:10px}.startChoices{gap:5px}.startChoice{min-height:64px;padding:6px}.startChoice small{font-size:9px}.startChoice .pict{font-size:14px}.inputGroup{margin:3px 0}.selectTitle{margin:6px 0 4px}.setupBtns{margin-top:6px}.setupBtns button{padding:7px}}
+@media(max-height:520px) and (pointer:coarse){
+ #side{display:none;top:63px;right:8px;bottom:8px;width:min(290px,48vw);max-height:none;z-index:25;padding:12px;overflow-y:auto}
+ #side.open{display:block}#rightToggle{display:block;position:fixed;top:65px;right:11px;z-index:12;border-radius:9px;background:#1b4042ea;border:1px solid #a8d5ae74;color:#e6e9d0;padding:8px 10px;font-size:12px;font-weight:800}
+ #objective{top:64px;left:8px;width:205px;max-height:150px;padding:10px;overflow:hidden}
+ #objective.collapsed{max-height:50px}#objectiveToggle{display:block;position:absolute;right:5px;top:5px;border:0;background:transparent;color:var(--aqua)}
+ #objective.collapsed p,#objective.collapsed .progress,#objective.collapsed #missionMeta{display:none}
+ #log,#mapButton{display:none}#bottom{display:none}#touch{display:flex;bottom:7px;padding:0 15px}
+ .joyArea{width:105px;height:105px}.joyKnob{width:50px;height:50px;left:calc(50% - 25px);top:calc(50% - 25px)}
+ .touchBtn{width:52px;height:52px}.touchBtn.main{width:61px;height:61px}.touchActions{gap:6px}
+ #screenCard{display:grid;grid-template-columns:.42fr .58fr}#heroArt{min-height:440px}
+ .heroText h1{font-size:23px}.setup{padding:12px 16px}.setup h2{font-size:16px}
+ .setup p{font-size:11px;margin-bottom:5px}.startChoice{min-height:68px;padding:7px}.startChoice small{font-size:9px}
+ .startChoice .pict{font-size:15px}.selectTitle{margin:7px 0 5px}.setupBtns{margin-top:8px}.setupBtns button{padding:8px}
+}
+
+/* Accessible, paced tutorial and clearer upgrade controls. */
+#helpBtn{font-size:11px;min-width:64px;border-color:#ead0928a;color:#ffe5ae}
+.survivalStatus{margin-top:9px;border-top:1px solid #aec8af32;padding-top:8px;color:#e6d8ad;font-size:11px;font-weight:750}
+.pathDescription{margin:11px 0 5px;padding:12px 13px;border-radius:10px;border:1px solid #d6bc8460;background:#233e3d;color:#dfede3;font-size:12px;line-height:1.55}
+.geneGuide{font-size:12px;line-height:1.55;background:#16343b;border:1px solid #8bbda65c;border-radius:10px;padding:11px;margin:10px 0;color:#d3e8dc}
+.geneGuide strong{color:#f5d799}.gene.focusGene{border-color:#edcf9d;background:linear-gradient(130deg,#3a5146,#18383b)}
+.gene .geneDesc{margin-top:5px;line-height:1.4;font-size:10.5px;color:#d7e3dc}
+.gene .nextLevel{color:#eccf9a;font-size:10px;line-height:1.4;margin-top:4px;display:block}
+#dialog p{font-size:14px;line-height:1.7}#dialog h2{font-size:24px}
+.tutorialStep{color:#a4ddc7;text-transform:uppercase;font-size:11px;font-weight:800;letter-spacing:.13em;margin:8px 0}
+.tutorialTip{border:1px solid #b9ce9770;background:#23433ca0;padding:12px;border-radius:10px;color:#f7e3b8;margin:10px 0;font-size:13px;line-height:1.5}
+.tutorialList{padding-left:18px;margin:10px 0;color:#dce8df;line-height:1.65}
+@media(min-width:651px) and (min-height:521px){#rightToggle{display:block;position:fixed;top:90px;right:15px;z-index:10;padding:11px 14px;border-radius:10px;background:#224442;border:1px solid #e0c88b;color:#f3dca2;font-weight:800;font-size:12px;box-shadow:0 8px 20px #0007}}
+@media(max-width:650px){#helpBtn{min-width:37px;font-size:10px;padding:0 5px}.survivalStatus{font-size:9px;margin-top:5px;padding-top:4px}#objective{max-height:205px}#objective.collapsed .survivalStatus{display:none}.pathDescription{font-size:11px;padding:8px;margin:6px 0}}
+@media(max-height:520px){#dialog{max-height:93vh;padding:12px 17px}#dialog p{font-size:12px;line-height:1.45}#dialog h2{font-size:18px}.tutorialTip{padding:7px}}
+</style>
+</head>
+<body>
+<canvas id="view"></canvas><div id="vignette"></div><div id="grain"></div>
+<div id="hudTop" class="ui hidden"><div class="glass brand"><div class="seal">✧</div><div><div class="brandName">GENESIS</div><div class="brandTag">THE FIRST DAWN</div></div></div><div class="glass topStats"><div class="stat"><b id="topYear">Year 0</b><label>World age</label></div><div class="stat"><b id="topSeason">Spring</b><label>Season</label></div><div class="stat"><b id="topTemp">18°C</b><label>Climate</label></div><div class="stat"><b id="topPop">0</b><label>Your species</label></div></div><div class="topActions"><button id="helpBtn" class="miniBtn" title="How to play / tutorial">? HELP</button><button id="pauseBtn" class="miniBtn" title="Pause simulation">Ⅱ</button><button id="speedBtn" class="miniBtn" title="Time speed">1×</button><button id="saveBtn" class="miniBtn" title="Save game">▣</button><button id="menuBtn" class="miniBtn" title="Journal and options">☰</button></div></div>
+<div id="objective" class="glass ui hidden"><button id="objectiveToggle">⌃</button><div class="eyebrow">CURRENT CHAPTER · <span id="missionStep">01 / 07</span></div><h3 id="missionTitle">A spark of life</h3><p id="missionText">Move your creature and find food.</p><div class="progress"><span id="missionFill" style="width:0%"></span></div><div id="missionMeta"><span id="missionTip">Follow the glowing food markers</span><span id="missionPct">0%</span></div><div id="survivalStatus" class="survivalStatus">Health 100 · Food 85 · Insight 8</div></div>
+<div id="side" class="glass ui hidden"><div class="panelHead"><h3 id="sideTitle">Evolution</h3><button id="sideClose" class="iconButton">✕</button></div><div id="sideContent"></div></div><button id="rightToggle" class="hidden">✦ EVOLVE</button>
+<div id="log" class="glass ui hidden"><div class="eyebrow">WORLD CHRONICLE</div><div id="logLines"></div></div><button id="mapButton" class="hidden">◈ WORLD MAP</button>
+<div id="bottom" class="glass ui hidden"><div class="modeTabs"><button id="creatureMode" class="sel">◉ Creature</button><button id="observerMode">✦ Observer</button></div><span class="divider"></span><div class="key">WASD<small>Move</small></div><div class="key hot">SPACE<small>Eat / Act</small></div><div class="key">F<small>Interact</small></div><div class="key">E<small>Evolution</small></div><div class="key">M<small>Map</small></div></div>
+<div id="touch" class="hidden"><div id="joystick" class="joyArea"><div id="knob" class="joyKnob"></div></div><div class="touchActions"><div class="touchCol"><button id="touchObserve" class="touchBtn">✦<small>VIEW</small></button><button id="touchEvolve" class="touchBtn">✧<small>EVOLVE</small></button></div><div class="touchCol"><button id="touchInteract" class="touchBtn">◈<small>ACT</small></button><button id="touchEat" class="touchBtn main">✦<small id="touchActionLabel">EAT</small></button></div></div></div>
+<div id="toastStack"></div>
+<div id="screen"><div class="starLayer"></div><div id="screenCard"><div id="heroArt"><canvas id="heroCanvas" width="850" height="900"></canvas><div class="heroText"><div class="eyebrow" style="color:#f1d9a2">A UNIVERSE THAT REMEMBERS</div><h1>GENESIS<br>TO THE STARS</h1><p>Before there were kingdoms, empires, or starships—there was a fragile spark of life. Shape what survives. Witness what it becomes.</p></div></div><div class="setup"><div class="eyebrow">THE FIRST DAWN · PLAYABLE CHAPTER</div><h2>Awaken a new world.</h2><p>Start as a single species in a living ecosystem. Hunt or graze, reproduce, adapt to change, and discover whether your descendants can build a civilization.</p><div class="inputGroup"><label for="seed">World seed</label><input id="seed" value="AURORA-7" maxlength="24" autocomplete="off"></div><div class="inputGroup"><label for="climate">Starting world</label><select id="climate"><option value="lush">Verdant · lush and fertile</option><option value="scarce">Harsh · scarce resources</option><option value="volatile">Wild · frequent upheaval</option></select></div><div class="inputGroup"><label for="past">Pre-creation history</label><select id="past"><option value="pristine">First ecosystems</option><option value="impact">After a great extinction</option><option value="abundant">Age of abundance</option></select></div><div class="selectTitle">CHOOSE HOW YOUR ANCESTORS SURVIVE</div><div id="startChoices" class="startChoices"><button class="startChoice chosen" data-path="grazer"><span class="pict">🌱</span><b>Forager</b><small>Eat plants, form social groups, avoid larger predators.</small></button><button class="startChoice" data-path="hunter"><span class="pict">🦷</span><b>Hunter</b><small>Track prey, grow stronger jaws, compete for food.</small></button><button class="startChoice" data-path="solar"><span class="pict">☀️</span><b>Sunborn</b><small>Harvest sunlight, endure hunger, migrate for warmth.</small></button><button class="startChoice" data-path="symbiote"><span class="pict">🍄</span><b>Symbiote</b><small>Gather nutrients with fungal partners and heal in forests.</small></button></div><div id="pathDescription" class="pathDescription">🌱 <b>Forager:</b> Find a glowing plant and press EAT. Food keeps you alive. Avoid red predators.</div><div class="setupBtns"><button id="startBtn" class="start">✧ BEGIN GENESIS</button><button id="continueBtn" class="hidden">Continue your last world</button><button id="installStart">↓ INSTALL ON PHONE</button></div><p class="smallPrint">Single-player • Offline after installation • Progress saves on this device</p></div></div></div>
+<div id="dialogOverlay" class="hidden"><div id="dialog" role="dialog" aria-modal="true"><div id="dialogContent"></div></div></div>
+<script>
+'use strict';
+const $=id=>document.getElementById(id), cv=$('view'),ctx=cv.getContext('2d',{alpha:false});
+const clamp=(v,a,b)=>Math.max(a,Math.min(b,v)),lerp=(a,b,t)=>a+(b-a)*t,dist=(a,b)=>Math.hypot(a.x-b.x,a.y-b.y),rnd=(a,b)=>a+Math.random()*(b-a);
+const W=2600,H=1760,TILE=40,GW=Math.ceil(W/TILE),GH=Math.ceil(H/TILE),TAU=2*Math.PI;
+const SAVEKEY='genesis-first-dawn-v1';let rngSeed=1,terrainSeed=1;
+function hashString(s){let h=2166136261>>>0;for(let i=0;i<s.length;i++){h=Math.imul(h^s.charCodeAt(i),16777619)>>>0}return h||7}
+function srnd(){rngSeed^=rngSeed<<13;rngSeed^=rngSeed>>>17;rngSeed^=rngSeed<<5;return (rngSeed>>>0)/4294967295}
+function seedRand(a,b){return a+(b-a)*srnd()}
+function nh(i,j,n=0){let x=Math.imul(i+67+(terrainSeed%173),374761393)+Math.imul(j+51+(terrainSeed%107),668265263)+Math.imul(n+7,144269);x=Math.imul(x^(x>>>13),1274126177);return ((x^(x>>>16))>>>0)/4294967295}
+function sm(t){return t*t*(3-2*t)}
+function noise(x,y,n=0){let i=Math.floor(x),j=Math.floor(y),a=sm(x-i),b=sm(y-j);return lerp(lerp(nh(i,j,n),nh(i+1,j,n),a),lerp(nh(i,j+1,n),nh(i+1,j+1,n),a),b)}
+function fbm(x,y,n=0){return noise(x,y,n)*.58+noise(x*2.07+11,y*2.07-9,n)*.29+noise(x*4.31-5,y*4.31+8,n)*.13}
+const pathData={
+ grazer:{name:'Mosskin',sub:'The patient wanderers',diet:'grazer',color:'#e2bd8d',accent:'#a6d4ab',speed:148,description:'Feeds on leaves and roots. Learns cooperation easily.'},
+ hunter:{name:'Veyran',sub:'The crimson stalkers',diet:'hunter',color:'#de917a',accent:'#f3c48b',speed:168,description:'Stalks prey and feeds on smaller animals. Strong jaws.'},
+ solar:{name:'Solari',sub:'The sun-drinkers',diet:'solar',color:'#b6d6a1',accent:'#f6e6a8',speed:125,description:'Absorbs sunlight; less dependent on forage.'},
+ symbiote:{name:'Mycorin',sub:'The fungal companions',diet:'symbiote',color:'#aa9ac5',accent:'#a9e2d9',speed:143,description:'Recovers energy under the woodland canopy.'}
+};
+const wildSpecies={shell:{name:'Shellback',color:'#9db69b',accent:'#e4e3a4',diet:'grazer',speed:90,life:36,r:17},stalker:{name:'Duskstalker',color:'#a36e78',accent:'#e5bfb0',diet:'hunter',speed:140,life:25,r:17},glimmer:{name:'Glimmerling',color:'#9bbfba',accent:'#a9efc5',diet:'grazer',speed:170,life:19,r:11},moth:{name:'Sporewing',color:'#aa9bbf',accent:'#e1d4d9',diet:'symbiote',speed:100,life:18,r:12}};
+const genes=[
+ {id:'mind',symbol:'✧',name:'Neural Bloom',text:'Greater memory and curiosity',effect:'+1 cognition',cost:12,max:3},
+ {id:'social',symbol:'❖',name:'Kinship Calls',text:'Cooperate and raise young',effect:'+1 social bonds',cost:12,max:3},
+ {id:'hands',symbol:'⌘',name:'Grasping Limbs',text:'Manipulate tools and objects',effect:'+1 dexterity',cost:12,max:2},
+ {id:'hide',symbol:'⬡',name:'Stonehide',text:'Survive attacks and cold',effect:'+1 protection',cost:9,max:3},
+ {id:'legs',symbol:'➶',name:'Springstep',text:'Move quickly through terrain',effect:'+1 speed',cost:9,max:3},
+ {id:'forage',symbol:'✿',name:'Efficient Gut',text:'Get more energy per meal',effect:'+1 nourishment',cost:9,max:3},
+ {id:'senses',symbol:'◉',name:'Night Senses',text:'Detect food and danger farther',effect:'+1 perception',cost:10,max:3},
+ {id:'brood',symbol:'✺',name:'Thriving Brood',text:'More births in good conditions',effect:'+1 fertility',cost:11,max:3}
+];
+const research=[
+ {id:'fire',name:'Firecraft',mark:'🔥',cost:{food:30,wood:22,stone:8,knowledge:15},desc:'Warmth, safer nights, and a new communal gathering place.'},
+ {id:'farm',name:'Cultivation',mark:'🌾',req:'fire',cost:{food:55,wood:40,stone:16,knowledge:38},desc:'Farms expand food production and settlement population.'},
+ {id:'writing',name:'Written Memory',mark:'📜',req:'farm',cost:{food:60,wood:44,stone:34,knowledge:78},desc:'Knowledge survives individual generations.'},
+ {id:'stars',name:'Observatory',mark:'✦',req:'writing',cost:{food:85,wood:78,stone:65,knowledge:145},desc:'Our descendants finally ask what lies beyond the night sky.'}
+];
+let lessonPending=false;
+let G=null,terrain=[],plants=[],props=[],mapCanvas=null,cam={x:0,y:0,zoom:1},frame=0,lastTime=0,simAcc=0,updateTimer=0,keys={},joy={x:0,y:0},mobileActionHeld=false,worldDirty=true,paused=false,dialogOpen=false,mode='creature',sideVisible=true,startPath='grazer',endReached=false,deferredInstall=null;
+let dims={w:window.innerWidth,h:window.innerHeight,dpr:1};
+function generateTerrain(seed,climate){rngSeed=hashString(seed);terrainSeed=rngSeed;terrain=[];plants=[];props=[];
+ const wet=climate==='scarce'?-0.11:climate==='lush'?.085:0;
+ for(let y=0;y<GH;y++){let row=[];for(let x=0;x<GW;x++){
+  const xx=x*TILE,yy=y*TILE;
+  const hill=fbm(x/18.5+3,y/15.5+2,1);
+  const humid=fbm(x/13+18,y/12-12,2)+wet;
+  const river=1390+Math.sin(yy/240)*230+Math.sin(yy/93)*25;
+  const coast=335+Math.sin(yy/300)*160+Math.sin(yy/90)*35;
+  const isLake=Math.hypot((xx-2110)/1.38,(yy-1170)/1.2)<240&&hill<.65;
+  const water=xx<coast||Math.abs(xx-river)<35||(isLake&&hill<.65);
+  let biome=water?'water':hill>.71?'rock':humid>.62?'forest':humid<.405?'scrub':humid>.54&&hill<.42?'marsh':'meadow';
+  const fertility=clamp((humid-.22)*1.55+(biome==='meadow'?.2:biome==='forest'?.33:biome==='water'?.1:0),.06,1);
+  row.push({biome,hill,humid,fertility,grass:clamp(fertility*seedRand(.65,1.1),0,1),burn:0,seed:srnd()});
+ }terrain.push(row)}
+ for(let i=0;i<465;i++){
+  let x=seedRand(70,W-70),y=seedRand(70,H-70),c=cellAt(x,y);
+  if(c.biome==='water'||c.biome==='rock')continue;
+  plants.push({x,y,kind:c.biome==='forest'?'fern':c.biome==='marsh'?'fungus':c.biome==='scrub'?'thorn':'flower',food:seedRand(55,100),size:seedRand(.7,1.5),seed:srnd()*20});
+ }
+ for(let i=0;i<580;i++){
+  let x=seedRand(25,W-25),y=seedRand(25,H-25),c=cellAt(x,y);
+  if(c.biome==='forest'&&srnd()>.15)props.push({x,y,type:'tree',s:seedRand(.65,1.55),seed:srnd()*10});
+  else if(c.biome==='rock')props.push({x,y,type:'stone',s:seedRand(.6,1.5),seed:srnd()*10});
+  else if(c.biome==='scrub'&&srnd()>.52)props.push({x,y,type:'shrub',s:seedRand(.7,1.3),seed:srnd()*10});
+ }
+ generateMapArt();worldDirty=true;
+}
+function cellAt(x,y){return terrain[clamp(Math.floor(y/TILE),0,GH-1)]?.[clamp(Math.floor(x/TILE),0,GW-1)]||{biome:'meadow',grass:.5,fertility:.7,hill:.5}}
+function validGround(x,y){return x>30&&x<W-30&&y>30&&y<H-30&&cellAt(x,y).biome!=='water'}
+function nearbyGround(x,y){for(let radius=0;radius<=185;radius+=16){for(let angle=0;angle<Math.PI*2;angle+=Math.PI/6){const xx=clamp(x+Math.cos(angle)*radius,50,W-50),yy=clamp(y+Math.sin(angle)*radius,50,H-50);if(validGround(xx,yy)&&cellAt(xx,yy).biome!=='rock')return {x:xx,y:yy}}}return safePos(x,y)}
+function safePos(x=W/2,y=H/2){for(let i=0;i<1200;i++){let xx=clamp(x+seedRand(-500,500),60,W-60),yy=clamp(y+seedRand(-400,400),60,H-60);if(validGround(xx,yy)&&cellAt(xx,yy).biome!=='rock')return {x:xx,y:yy}}return {x:700,y:600}}
+function spawnCreature(kind,x,y,player=false){const profile=kind==='player'?pathData[G.path]:wildSpecies[kind],p=validGround(x,y)?{x,y}:safePos(x,y);
+return {id:G.nextId++,kind,x:p.x,y:p.y,angle:srnd()*TAU,hp:100,hunger:seedRand(60,100),age:seedRand(0,8),life:kind==='player'?32:profile.life,r:kind==='player'?17:profile.r,homeX:p.x,homeY:p.y,desX:p.x,desY:p.y,wander:0,breed:seedRand(3,8),attack:0,flash:0,dead:false,player,offspring:0,role:'wander',state:'roam'}
+}
+function genesisWorld(seed,climate,path,past='pristine'){generateTerrain(seed,climate);const pos=safePos(780,880);G={seed,climate,path,past,year:0,season:0,temp:climate==='scarce'?24:climate==='volatile'?15:19,cloud:.3,water:.7,prevTemp:19,era:'life',population:0,worldPop:0,playerId:0,nextId:1,actors:[],genes:{mind:0,social:0,hands:0,hide:0,legs:0,forage:0,senses:0,brood:0},ep:12,soul:0,meals:0,kills:0,events:0,guide:0,history:[],stats:[],tribe:null,research:{},ruins:[],tutorial:0,modifier:climate==='volatile'?'Unstable crust':climate==='scarce'?'Lean ages':'Great flowering',incident:null,regen:0,screenEnd:false,lessonFlags:{},showAllGenes:false,geneBought:0,learningStart:true,damageNumbers:[]};
+ for(let i=0;i<12;i++){
+  const a=spawnCreature('player',pos.x+seedRand(-260,260),pos.y+seedRand(-220,220));G.actors.push(a);
+ }
+ for(const [kind,n] of Object.entries(past==='impact'?{shell:24,stalker:2,glimmer:38,moth:19}:past==='abundant'?{shell:30,stalker:15,glimmer:46,moth:24}:{shell:21,stalker:9,glimmer:34,moth:18}))for(let i=0;i<n;i++)G.actors.push(spawnCreature(kind,seedRand(40,W-40),seedRand(40,H-40)));
+ let p=G.actors.find(a=>a.kind==='player');p.x=pos.x;p.y=pos.y;p.player=true;p.hunger=85;p.age=3;G.playerId=p.id;
+ G.history.unshift({year:0,title:past==='impact'?'Survivors of the skyfall':past==='abundant'?'The overflowing age':'The First Dawn',text:past==='impact'?`Long before your species emerged, an impact ended the age of giant predators. The ${pathData[path].name} arose in the ecological vacuum.`:past==='abundant'?`On ${planetName()}, life flourished in great numbers. Food was plentiful, but so was competition.`:`On the young world of ${planetName()}, the ${pathData[path].name} lineage emerged among other struggling forms of life.`});
+ // Start with a quiet training clearing. Keep the full population, but disperse
+ // the unrelated wild creatures and kin so the first screen has one clear objective.
+ const tutorialPrey=G.actors.filter(a=>a.kind==='glimmer'||a.kind==='shell').slice(0,4);
+ let ownIndex=0;
+ for(const a of G.actors){
+  if(a.kind==='player'&&a.id!==p.id){
+    const group=Math.floor(ownIndex/4),i=ownIndex%4;ownIndex++;
+    const centers=[[1610,890],[370,1460],[1800,1350]];const target=centers[group%3];
+    const cp=nearbyGround(target[0]+i*32,target[1]+i*24);a.x=cp.x;a.y=cp.y;a.desX=a.x+26;a.desY=a.y;a.homeX=a.x;a.homeY=a.y;
+  }else if(a.kind!=='player'&&!tutorialPrey.includes(a)&&Math.hypot(a.x-pos.x,a.y-pos.y)<300){
+    const cp=nearbyGround(1820+((a.id%6)*35),350+((a.id%5)*43));a.x=cp.x;a.y=cp.y;a.desX=a.x+20;a.desY=a.y;a.homeX=a.x;a.homeY=a.y;
+  }
+ }
+ // Give each path a safe, readable first experience with a nearby food source.
+ for(const a of G.actors){if(a.kind==='stalker'&&Math.hypot(a.x-pos.x,a.y-pos.y)<480){const far=safePos(2050,300);a.x=far.x;a.y=far.y;a.desX=far.x;a.desY=far.y}}
+ if(path==='hunter'){
+  let prey=G.actors.filter(a=>a.kind==='glimmer'||a.kind==='shell').slice(0,4);
+  let offsets=[[110,0],[155,75],[-145,80],[0,-165]];
+  prey.forEach((a,i)=>{const cp=nearbyGround(pos.x+offsets[i][0],pos.y+offsets[i][1]);a.x=cp.x;a.y=cp.y;a.desX=cp.x+30;a.desY=cp.y;a.hunger=92;a.hp=100;a.wander=12})
+ }else if(path==='grazer'||path==='symbiote'){
+  for(let i=0;i<5;i++){const pp=nearbyGround(pos.x+(i-2)*40,pos.y+Math.sin(i*2)*36);plants.push({x:pp.x,y:pp.y,kind:path==='symbiote'?'fungus':'flower',food:100,size:1.3,seed:srnd()*20})}
+ }
+ G.population=G.actors.filter(a=>a.kind==='player').length;G.worldPop=G.actors.length;
+ mode='creature';endReached=false;paused=false;dialogOpen=false;simAcc=0;updateTimer=0;cam.x=pos.x;cam.y=pos.y;cam.zoom=1;saveGame(false);refreshAll();hideSide();$('objective').classList.add('collapsed');$('objectiveToggle').textContent='⌄';
+}
+function planetName(){const names=['Elyra','Orenth','Verdess','Namaris','Solenne','Kaelion'];return names[hashString(G?.seed||$('seed')?.value||'AURORA-7')%names.length]||'Elyra'}
+function controlled(){return G?.actors.find(a=>a.id===G.playerId&&!a.dead)||null}
+function population(kind){return G.actors.reduce((n,a)=>n+(!a.dead&&a.kind===kind?1:0),0)}
+function seasonName(){return ['Bloom','Suncrest','Harvest','Deepwinter'][Math.floor(G.year/12)%4]}
+function climateEffect(){return G.incident?G.incident.type==='drought'?-.35:G.incident.type==='ash'?-.25:G.incident.type==='flood'?.21:.13:0}
+function genealogyCost(g){const lv=G.genes[g.id];return Math.floor(g.cost*(1+lv*.55))}
+function nearestFood(a,rad=100){let best=null,dd=rad*rad;for(const p of plants){if(p.food<14)continue;const d=(p.x-a.x)**2+(p.y-a.y)**2;if(d<dd){dd=d;best=p}}return best}
+function nearestPrey(a,rad=150){let best=null,dd=rad*rad;for(const other of G.actors){if(other===a||other.dead||other.kind===a.kind)continue;let isPred=a.kind==='player'&&G.path==='hunter'||a.kind==='stalker';if(!isPred)continue;let target=a.kind==='stalker'?other.kind==='glimmer'||other.kind==='player':other.kind==='glimmer'||other.kind==='shell';if(!target)continue;const d=(other.x-a.x)**2+(other.y-a.y)**2;if(d<dd){dd=d;best=other}}return best}
+function addHistory(title,text){G.history.unshift({year:Math.floor(G.year),title,text});G.history=G.history.slice(0,70);refreshLog()}
+function toast(str,kind=''){const a=document.createElement('div');a.className='toast';a.innerHTML=str;$('toastStack').appendChild(a);setTimeout(()=>a.remove(),3900);while($('toastStack').children.length>3)$('toastStack').firstChild.remove()}
+function setPopulation(){G.population=population('player');G.worldPop=G.actors.reduce((n,a)=>n+(!a.dead?1:0),0)}
+function nearestUsableFood(a,rad=120){
+ const valid=p=>p.food>=14&&(G.path==='symbiote'?p.kind==='fungus':G.path==='grazer'?p.kind!=='fungus':false);
+ let best=null,dd=rad*rad;
+ for(const p of plants){if(!valid(p))continue;const d=(p.x-a.x)**2+(p.y-a.y)**2;if(d<dd){best=p;dd=d}}return best
+}
+function earnedInsight(amount){G.ep+=amount*(1+G.genes.mind*.12)}
+function lessonOnce(id,title,body,actions){if(!G||G.lessonFlags?.[id])return false;G.lessonFlags=G.lessonFlags||{};G.lessonFlags[id]=true;saveGame(false);openDialogue(title,body,actions||[{label:'GOT IT · RESUME',primary:true}]);return true}
+function act(){if(!G||paused||dialogOpen)return;let p=controlled();if(!p)return;
+ const path=G.path;const locked=G.actors.find(a=>a.id===G.huntTargetId&&!a.dead);const prey=path==='hunter'?(locked&&dist(p,locked)<115?locked:nearestPrey(p,96)):null;
+ const food=(path==='grazer'||path==='symbiote')?nearestUsableFood(p,68):null;
+ let done=false;
+ if(path==='hunter'){
+  if(prey){G.huntTargetId=prey.id;const dmg=36+G.genes.hands*8+G.genes.hide*3;attackCreature(p,prey,dmg);done=true;
+   if(prey.dead){G.huntTargetId=0;p.hunger=clamp(p.hunger+52+G.genes.forage*9,0,100);earnedInsight(3);G.meals++;toast('Prey defeated and eaten · <b>+3 insight</b>');}
+   else toast(`${wildSpecies[prey.kind]?.name||'Prey'} · <b>${Math.ceil(Math.max(0,prey.hp))}% health left</b>`);
+  }else toast('HUNTER: Follow the red PREY marker. Get close, then press HUNT more than once. Plants are not food for this species.');
+ }else if(path==='solar'){
+  const good=G.temp>8&&G.temp<35&&G.incident?.type!=='ash';
+  if(good){p.hunger=clamp(p.hunger+30+G.genes.forage*9,0,100);earnedInsight(1.5);G.meals++;particles(p.x,p.y,'#f9e6a0',14);toast('Absorbed sunlight · <b>+1.5 insight</b>');done=true}
+  else toast('SUNBORN: Light is weak or temperatures are extreme. Wait for clearer, warmer conditions.');
+ }else if(path==='symbiote'){
+  if(food){const gain=37+G.genes.forage*9;food.food=Math.max(0,food.food-35);p.hunger=clamp(p.hunger+gain,0,100);earnedInsight(1.5);G.meals++;particles(food.x,food.y,'#cdafe5',14);toast('Absorbed nutrients from fungi · <b>+1.5 insight</b>');done=true}
+  else if(cellAt(p.x,p.y).biome==='forest'){p.hunger=clamp(p.hunger+23+G.genes.forage*9,0,100);p.hp=Math.min(100,p.hp+4+G.genes.hide*2);earnedInsight(1);G.meals++;toast('Forest symbiosis: nourishment and healing · <b>+1 insight</b>');done=true}
+  else toast('SYMBIOTE: Seek the purple FUNGUS marker or move under the green forest canopy.');
+ }else if(food){const gain=37+G.genes.forage*9;food.food=Math.max(0,food.food-37);p.hunger=clamp(p.hunger+gain,0,100);earnedInsight(1.5);G.meals++;particles(food.x,food.y,'#d8eab6',14);toast('Plant eaten · <b>+1.5 insight</b>');done=true}
+ else toast('FORAGER: Follow the green FOOD marker to an edible plant. Approach before pressing EAT.');
+ if(done){p.flash=.23;if(G.meals===1){updateMission();refreshSidebar();lessonOnce('firstMeal','YOUR FIRST MEAL · WELL DONE',`<div class="tutorialStep">LESSON 2 · THE EVOLUTION PANEL</div><p>You succeeded as a <b>${pathData[path].name}</b>. The food meter is your survival energy. Keep it above zero.</p><p>Feeding earns <b>✧ Evolution Insight</b>. Adaptations spend that insight to change your <b>whole species</b>, not just this body.</p><div class="tutorialTip">Now open <b>✦ EVOLVE</b> on your screen (or press <b>E</b>). Tap an adaptation to read what it really does. Nothing is purchased until you confirm.</div>`,[{label:'SHOW MY ADAPTATIONS',primary:true,run:()=>{showEvolutionPanel()}}])}}
+ updateMission();refreshSidebar();refreshHUD();
+}
+function attackCreature(from,to,damage){if(to.dead)return;const protection=to.kind==='player'?Math.max(.4,1-(G.genes.hide||0)*.17):1;to.hp-=damage*protection;to.flash=.6;from.angle=Math.atan2(to.y-from.y,to.x-from.x);to.x=clamp(to.x+Math.cos(from.angle)*19,20,W-20);to.y=clamp(to.y+Math.sin(from.angle)*19,20,H-20);particles(to.x,to.y,'#f0b9a0',8);if(to.hp<=0){to.dead=true;G.kills++;if(to.id===G.playerId)handlePlayerDeath()}}
+function handlePlayerDeath(){const other=G.actors.find(a=>a.kind==='player'&&!a.dead);if(other){G.playerId=other.id;other.player=true;other.hunger=clamp(other.hunger+25,0,100);toast('Your body perished. <b>Your lineage continues.</b>');addHistory('A life ends','One ancestor fell, but its descendants carried the lineage onward.')}else{G.playerId=0;toast('<b>Your lineage has gone extinct.</b> Open the menu to restart or reseed.');addHistory('The last of a species',`The ${pathData[G.path].name} lineage vanished from the ecosystem.`)}}
+function speciesAI(a,realDelta){if(a.dead)return;const isPlayer=a.id===G.playerId;const sp=a.kind==='player'?pathData[G.path]:wildSpecies[a.kind];if(isPlayer&&mode==='creature')return;
+ const t=realDelta;let rate=(sp.speed||130)*(a.kind==='player'?(1+G.genes.legs*.14):1);
+ if(a.kind==='player'&&G.tribe&&dist(a,G.tribe)<400){a.role=a.id%4===0?'builder':a.id%3===0?'gatherer':'wander'}
+ if(a.wander<=0||Math.hypot(a.desX-a.x,a.desY-a.y)<20){a.desX=clamp(a.x+seedRand(-230,230),20,W-20);a.desY=clamp(a.y+seedRand(-230,230),20,H-20);a.wander=seedRand(2,6)}
+ a.wander-=t;
+ if(a.hunger<82){let target=null;
+  if(a.kind==='stalker'||a.kind==='player'&&G.path==='hunter')target=nearestPrey(a,175);
+  if(!target&&!((a.kind==='stalker')||(a.kind==='player'&&G.path==='hunter')))target=a.kind==='player'&&G.path==='symbiote'?plants.find(p=>p.kind==='fungus'&&p.food>20&&dist(p,a)<180):nearestFood(a,180);
+  if(target){a.desX=target.x;a.desY=target.y;if(dist(a,target)<(target.kind?28:25)){
+    if(target.kind){if(a.attack<=0){attackCreature(a,target,a.kind==='stalker'?27:18);a.attack=2.5;if(target.dead)a.hunger=Math.min(100,a.hunger+56)}}
+    else if(target.food>10){target.food=Math.max(0,target.food-19);a.hunger=Math.min(100,a.hunger+24)}
+  }}
+ }
+ if(a.kind==='player'&&G.tribe&&a.role==='gatherer'&&dist(a,G.tribe)<260&&G.tribe.mode==='gather'){
+  a.desX=G.tribe.x+seedRand(-95,95);a.desY=G.tribe.y+seedRand(-95,95)
+ }
+ const dx=a.desX-a.x,dy=a.desY-a.y,d=Math.hypot(dx,dy)||1;
+ if(d>12){let nx=a.x+dx/d*rate*.24*t,ny=a.y+dy/d*rate*.24*t;if(validGround(nx,ny)){a.x=nx;a.y=ny;a.angle=Math.atan2(dy,dx)}else{a.desX=a.x+seedRand(-190,190);a.desY=a.y+seedRand(-190,190)}}
+}
+function worldEvent(force=false){const events=['drought','bloom','ash','flood'];let type=events[Math.floor(srnd()*events.length)];if(G.climate==='scarce'&&srnd()<.48)type='drought';if(G.climate==='lush'&&srnd()<.38)type='bloom';G.incident={type,until:G.year+seedRand(12,23)};G.events++;
+ const texts={drought:['The Long Thirst','Rivers shrink and forage plants struggle. Hunger spreads among grazers.'],bloom:['The Great Bloom','Warm rains bring flourishing plant growth and a wave of new life.'],ash:['Ashfall','A distant volcano coats the sky with ash. Sunlight fades and food becomes scarce.'],flood:['The Rising Waters','Seasonal floods spread fresh nutrients but displace creatures on the lowlands.']};
+ addHistory(texts[type][0],texts[type][1]);toast(`<b>${texts[type][0]}</b> · The ecosystem changes.`);G.temp+=(type==='ash'?-5:type==='drought'?6:type==='flood'?-2:2);
+}
+function runSimulation(yrs){if(!G||G.screenEnd)return;const before=Math.floor(G.year/12);G.year+=yrs;
+ const sun=20+8*Math.sin(G.year/12*TAU/4-1.3);
+ const weather=G.incident?.type==='ash'?-7:G.incident?.type==='drought'?8:G.incident?.type==='flood'?-2:0;
+ const baseline=G.climate==='scarce'?4:G.climate==='volatile'?-2:0;
+ G.temp=lerp(G.temp,sun+baseline+weather,.08);
+ G.cloud=clamp(G.cloud+(srnd()-.5)*.13,.04,.95);
+ const cl=climateEffect();
+ if(G.incident&&G.year>=G.incident.until){addHistory('A changing climate',`The ${G.incident.type} season ended. Survivors occupied newly available habitats.`);G.incident=null}
+ const eventRate=(G.meals<1||G.year<24)?0:G.climate==='volatile'?1/52:G.climate==='scarce'?1/90:1/115;
+ if(!G.incident&&srnd()<yrs*eventRate)worldEvent();
+ const regen=clamp(.11+cl*.33+(G.climate==='lush'?.1:0)+(G.past==='impact'?.035:0),.015,.48);
+ for(let i=0;i<plants.length;i++){const p=plants[i],c=cellAt(p.x,p.y),r=regen*(c.fertility+.1)*(p.kind==='fungus'?1.1:1);p.food=clamp(p.food+r*yrs*7,0,100)}
+ const oldPop=G.population;
+ for(const a of G.actors){if(a.dead)continue;a.age+=yrs;a.breed-=yrs;a.attack=Math.max(0,a.attack-yrs*.3);a.flash=Math.max(0,a.flash-yrs*.08);
+  let loss=yrs*(G.path==='solar'&&a.kind==='player'?2.3:a.kind==='player'?3.65:3.3);
+  loss+=yrs*(G.incident?.type==='drought'?1.5:0);
+  a.hunger=clamp(a.hunger-loss,0,100);
+  // Background populations have access to diffuse food across their habitat.
+  // Explicit nearby forage and hunting still provide larger immediate rewards.
+  // This prevents fast-forwarded years from starving every unattended organism.
+  if(a.id!==G.playerId){
+    let fert=cellAt(a.x,a.y).fertility;
+    const disruption=G.incident?.type==='drought'?.48:G.incident?.type==='ash'?.64:1;
+    const isHunter=a.kind==='stalker'||a.kind==='player'&&G.path==='hunter';
+    const herbRate=isHunter?(population('glimmer')+population('shell')>10?4.4:1.5):(2.6+fert*5.8);
+    a.hunger=clamp(a.hunger+yrs*herbRate*disruption,0,100);
+  }
+  const sp=a.kind==='player'?pathData[G.path]:wildSpecies[a.kind];
+  if(a.kind==='player'&&G.path==='solar'&&G.temp>6&&G.temp<35&&G.incident?.type!=='ash')a.hunger=clamp(a.hunger+yrs*3.2,0,100);
+  if(a.kind==='player'&&G.path==='symbiote'&&cellAt(a.x,a.y).biome==='forest')a.hunger=clamp(a.hunger+yrs*2.8,0,100);
+  if(a.hunger===0)a.hp-=yrs*12;
+  else if(a.hunger>45)a.hp=Math.min(100,a.hp+yrs*(a.kind==='player'?2.1:1.5));
+  if(G.incident?.type==='ash'&&a.kind==='player'&&G.path==='solar')a.hp-=yrs*1.7;
+  const life=(a.kind==='player'?36+G.genes.hide*4:sp.life);
+  if(a.age>life||a.hp<=0){a.dead=true;if(a.id===G.playerId)handlePlayerDeath();continue}
+  const burden=Math.max(0,population(a.kind)-(a.kind==='player'?85:65));
+  const habitat=clamp((G.climate==='scarce'?.72:1.05)+(G.incident?.type==='bloom'?.24:0)+(G.tribe&&a.kind==='player'&&G.research.farm?.4:0),.65,1.8);
+  if(a.breed<=0&&a.age>4&&a.hunger>47&&G.actors.length<410&&srnd()<clamp((.85-burden*.018)*habitat+(a.kind==='player'?G.genes.brood*.14:0),.08,.96)){
+    const mate=G.actors.some(b=>b!==a&&!b.dead&&b.kind===a.kind&&Math.hypot(b.x-a.x,b.y-a.y)<(a.kind==='player'?420+G.genes.social*130:420));
+    if(mate){let child=spawnCreature(a.kind,a.x+seedRand(-40,40),a.y+seedRand(-40,40));child.age=0;child.hunger=69;G.actors.push(child);a.hunger-=14;a.offspring++;if(a.kind==='player'){G.ep+=.6;G.soul++}}
+    a.breed=seedRand(7,12)/habitat;
+  }else if(a.breed<=0)a.breed=seedRand(2,5);
+ }
+ G.actors=G.actors.filter(a=>!a.dead||a.id===G.playerId);
+ // Keep the controlled ancestor in the simulation when the world is crowded.
+ if(G.actors.length>320){
+   const chosen=G.actors.find(a=>a.id===G.playerId&&!a.dead);
+   let rest=G.actors.filter(a=>a!==chosen).slice(-(320-(chosen?1:0)));
+   G.actors=chosen?[chosen,...rest]:rest;
+ }
+ setPopulation();if(G.population>oldPop&&G.population>0&&G.population%8===0&&G.population!==G.lastPopMilestone){G.lastPopMilestone=G.population;addHistory('Life finds a way',`The ${pathData[G.path].name} population grew to ${G.population}. Their adaptations allowed more descendants to survive.`)}
+ earnedInsight(yrs*(.035+G.population*.013));
+ if(!controlled()&&G.population>0){const next=G.actors.find(a=>a.kind==='player'&&!a.dead);if(next){G.playerId=next.id;toast('A surviving descendant carries your lineage.')}}
+ if(G.population===0&&srnd()<yrs*.04){if(G.tribe){G.tribe.morale=Math.max(0,G.tribe.morale-3)}}
+ if(G.tribe)updateTribe(yrs);
+ if(Math.floor(G.year/12)!==before){G.stats.push({year:Math.floor(G.year),player:G.population,prey:population('glimmer')+population('shell'),hunters:population('stalker'),temp:Math.round(G.temp)});G.stats=G.stats.slice(-75)}
+ if(G.era==='life')checkConsciousness();updateMission();
+}
+function checkConsciousness(){if(G.population>=12&&G.genes.mind>=2&&G.genes.social>=2&&G.genes.hands>=1&&!G.tribe){let p=controlled()||G.actors.find(a=>a.kind==='player'&&!a.dead);if(!p)return;const campAt=validGround(p.x+55,p.y+45)?{x:p.x+55,y:p.y+45}:safePos(p.x,p.y);G.tribe={x:campAt.x,y:campAt.y,food:40,wood:30,stone:18,knowledge:4,morale:72,mode:'gather',citizens:G.population,yearFounded:Math.floor(G.year),buildings:1};G.era='tribe';G.ep+=8;
+ addHistory('The First Words',`The ${pathData[G.path].name} exchanged signs and learned to plan together. Near a sheltered grove, the first gathering place was born.`);
+ toast('<b>THE FIRST TRIBE!</b> · A new age begins.');showMilestone('THE FIRST WORDS','The creatures that once survived alone now share ideas. Their camp will need food, shelter, knowledge—and a reason to look beyond tomorrow.','Continue the story');refreshAll()}}
+function updateTribe(yrs){let t=G.tribe;if(!t)return;t.citizens=G.population;
+ const mult=clamp(G.population/16,.3,3.7),boost=G.research.farm?1.65:1,cl=G.incident?.type==='drought'?.5:G.incident?.type==='ash'?.63:1;
+ const eff=t.mode==='forage'?1.7:1;
+ t.food=clamp(t.food+(2.9*mult*boost*cl*eff-1.8*mult)*yrs,0,999);
+ t.wood=clamp(t.wood+(t.mode==='build'?2.4:1.25)*mult*(1+G.genes.hands*.15)*yrs,0,999);
+ t.stone=clamp(t.stone+(t.mode==='build'?1.65:.78)*mult*(1+G.genes.hands*.15)*yrs,0,999);
+ t.knowledge=clamp(t.knowledge+(t.mode==='study'?2.7:.85)*mult*(G.research.writing?1.5:1)*(1+G.genes.mind*.12)*yrs,0,999);
+ const moraleChange=t.food<8?-4:t.food>35?1.4:.1;
+ t.morale=clamp(t.morale+moraleChange*yrs,0,100);
+ if(t.morale<10&&srnd()<yrs*.06){const a=G.actors.find(a=>a.kind==='player'&&!a.dead&&a.id!==G.playerId);if(a){a.dead=true;toast('Hungry villagers abandon the camp.')}}
+ if(t.food>60&&t.wood>50&&t.buildings<3){t.wood-=40;t.food-=15;t.buildings++;addHistory('Shelter rises',`The tribe constructed a new communal shelter beside the grove.`)}
+}
+function buyGene(id){if(!G)return;const gene=genes.find(g=>g.id===id);if(!gene)return;let level=G.genes[id],cost=genealogyCost(gene);if(level>=gene.max||G.ep<cost){toast('Not enough evolutionary insight, or adaptation already at its limit.');return}G.ep-=cost;G.genes[id]++;G.geneBought=(G.geneBought||0)+1;particles(controlled()?.x||1100,controlled()?.y||880,'#e0e9ad',19);addHistory('A new adaptation',`${pathData[G.path].name} descendants developed ${gene.name.toLowerCase()}. This trait now shapes the entire lineage.`);toast(`Adaptation evolved: <b>${gene.name}</b>`);checkConsciousness();refreshAll();saveGame(false);
+ if(G.geneBought===1)lessonOnce('firstGene','EVOLUTION CHANGES YOUR DESCENDANTS',`<div class="tutorialStep">LESSON 3 · GENERATIONS</div><p>Your first adaptation is active. Different upgrades help feeding, hunting, speed, defense, reproduction or the eventual emergence of civilization.</p><p><b>Population grows automatically</b> when individuals are nourished, mature, and able to find mates. You control one body, but your whole species continues living.</p><div class="tutorialTip">Now let time pass. Use the <b>1× / 4× / 12×</b> time control at the top when you're ready; keep checking your food and population.</div>`,[{label:'CONTINUE MY LINEAGE',primary:true}]);
+ }
+function buyResearch(id){if(!G?.tribe)return;const item=research.find(r=>r.id===id);if(!item||G.research[id]||(item.req&&!G.research[item.req]))return;const t=G.tribe;
+ if(Object.entries(item.cost).some(([k,n])=>t[k]<n)){toast('The settlement lacks resources. Change priorities or advance time.');return}
+ for(const [k,n]of Object.entries(item.cost))t[k]-=n;G.research[id]=true;
+ addHistory(item.name,`The ${pathData[G.path].name} civilization discovered ${item.name.toLowerCase()}. ${item.desc}`);toast(`Discovery: <b>${item.name}</b>`);particles(t.x,t.y,'#e5d49d',28);
+ if(id==='stars'){endReached=true;G.screenEnd=true;setTimeout(()=>showFinal(),800)}
+ updateMission();refreshAll();saveGame(false)
+}
+function changePolicy(p){if(!G?.tribe)return;G.tribe.mode=p;toast(`Tribal priority: <b>${p==='forage'?'Foraging':p==='build'?'Construction':'Learning'}</b>`);refreshSidebar()}
+function steer(dx,dy,realDt){const p=controlled();if(!p)return;let l=Math.hypot(dx,dy);if(l<.04)return;dx/=l;dy/=l;let s=pathData[G.path].speed*(1+G.genes.legs*.14),nx=clamp(p.x+dx*s*realDt,20,W-20),ny=clamp(p.y+dy*s*realDt,20,H-20);if(validGround(nx,ny)){p.x=nx;p.y=ny}p.angle=Math.atan2(dy,dx);p.wander=1;G.guide+=realDt;cam.x=lerp(cam.x,p.x,.13);cam.y=lerp(cam.y,p.y,.13)}
+function interact(){if(!G)return;let p=controlled();if(!p)return;if(G.tribe&&dist(p,G.tribe)<150){openDialogue('THE FIRST HEARTH','The tribe gathers around its shared fire. You can guide what they prioritize, but they will gather and grow on their own.',[{label:'Forage food',run:()=>changePolicy('forage')},{label:'Build shelter',run:()=>changePolicy('build')},{label:'Study nature',run:()=>changePolicy('study')}]);return}
+ let near=G.actors.filter(a=>a.kind!=='player'&&!a.dead&&dist(a,p)<90).sort((a,b)=>dist(a,p)-dist(b,p))[0];if(near){const sp=wildSpecies[near.kind];toast(`${sp.name}: ${Math.floor(near.age)} years old · ${Math.round(near.hunger)}% fed. It acts independently.`)}else{toast('Move near the communal hearth to guide your tribe, or approach a creature to observe it.')}
+}
+function saveGame(notify=true){if(!G)return;try{const clean={...G,actors:G.actors.filter(a=>!a.dead).map(({player,...rest})=>rest),stats:G.stats.slice(-65),history:G.history.slice(0,50)};localStorage.setItem(SAVEKEY,JSON.stringify({game:clean,cam,mode,version:1}));if(notify)toast('Your world has been saved on this device.')}catch(e){if(notify)toast('Save failed — storage may be unavailable.')}}
+function exportSave(){if(!G)return;saveGame(false);const pack={game:{...G,actors:G.actors.filter(a=>!a.dead).map(({player,...rest})=>rest)},cam,mode,version:1};const blob=new Blob([JSON.stringify(pack)],{type:'application/json'}),url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download='Genesis_World_'+G.seed.replace(/[^a-z0-9-]/gi,'_')+'.json';document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),2000);toast('World save file exported.')}
+function importSave(){const input=document.createElement('input');input.type='file';input.accept='.json,application/json';input.onchange=async()=>{const f=input.files?.[0];if(!f)return;try{const pack=JSON.parse(await f.text());if(!pack?.game?.seed||!pathData[pack.game.path]||!Array.isArray(pack.game.actors))throw Error('Invalid save file');localStorage.setItem(SAVEKEY,JSON.stringify(pack));loadGame();toast('World imported successfully.');}catch(e){toast('Unable to import this world file.')}};input.click()}
+function loadGame(){try{const pack=JSON.parse(localStorage.getItem(SAVEKEY));if(!pack||!pack.game)return false;G=pack.game;G.lessonFlags=G.lessonFlags||{};G.geneBought=G.geneBought||Object.values(G.genes||{}).reduce((a,b)=>a+(Number(b)||0),0);G.showAllGenes=!!G.showAllGenes;G.genes.senses=G.genes.senses||0;generateTerrain(G.seed,G.climate);let savedPath=G.path;for(const a of G.actors){a.dead=false;a.attack=a.attack||0;a.wander=a.wander||0;a.desX=a.desX||a.x;a.desY=a.desY||a.y;}G.path=savedPath;G.playerId=G.actors.find(a=>a.id===G.playerId)?.id||G.actors.find(a=>a.kind==='player')?.id||0;cam=pack.cam||{x:1000,y:800,zoom:1};mode=pack.mode||'creature';paused=false;dialogOpen=false;endReached=!!G.screenEnd;setPopulation();refreshAll();hideSide();return true}catch(e){console.error('Save could not be loaded',e);return false}}
+const palette={water:'#244f55',forest:'#30534b',meadow:'#6b7952',marsh:'#3d6557',scrub:'#806d4d',rock:'#6a6c63'};
+function generateMapArt(){let c=document.createElement('canvas');c.width=W;c.height=H;mapCanvas=c;const q=c.getContext('2d',{alpha:false});
+let base=q.createLinearGradient(0,0,W,H);base.addColorStop(0,'#273e3d');base.addColorStop(.5,'#576749');base.addColorStop(1,'#243c36');q.fillStyle=base;q.fillRect(0,0,W,H);
+for(let y=0;y<GH;y++)for(let x=0;x<GW;x++){
+ const d=terrain[y][x],xx=x*TILE,yy=y*TILE;
+ const shading=(d.seed-.5)*18,bi=d.biome, colors=bi==='water'?[34,85,92]:bi==='forest'?[37,73,62]:bi==='meadow'?[93,115,73]:bi==='marsh'?[66,93,74]:bi==='rock'?[101,100,90]:[128,106,74];
+ let col=colors.map(v=>Math.round(clamp(v+shading,0,255)));q.fillStyle=`rgb(${col.join(',')})`;q.fillRect(xx,yy,TILE+.5,TILE+.5);
+ if(bi!=='water'){
+  q.fillStyle=bi==='forest'?'#162e2630':bi==='rock'?'#e1d5b018':'#d2c59117';
+  for(let j=0;j<7;j++){let px=xx+nh(x,j+y*7,3)*TILE,py=yy+nh(y,x+j*5,4)*TILE;q.beginPath();q.ellipse(px,py,1+nh(j,x,y)*6,.5+nh(x,j,y)*3,nh(j,y,x)*TAU,0,TAU);q.fill()}
+ }
+ if(bi==='water'){
+  q.fillStyle='rgba(8,43,50,.22)';q.fillRect(xx,yy,TILE+.5,TILE+.5);
+  q.strokeStyle='rgba(158,226,206,.11)';q.lineWidth=1.8;q.beginPath();let px=xx+nh(x,y,7)*30,py=yy+nh(x,y,8)*32;q.moveTo(px,py);q.quadraticCurveTo(px+8,py-4,px+25,py+1);q.stroke()
+ }
+}
+// Gentle terrain patches blur the square borders into painterly clusters.
+for(let i=0;i<790;i++){
+ const px=seedRand(0,W),py=seedRand(0,H),t=cellAt(px,py);if(t.biome==='water')continue;
+ q.fillStyle=t.biome==='forest'?'#18463821':t.biome==='scrub'?'#e2a96d18':t.biome==='rock'?'#d1c3a320':'#cfbc6b16';
+ q.beginPath();q.ellipse(px,py,seedRand(15,65),seedRand(8,36),seedRand(0,TAU),0,TAU);q.fill();
+}
+// River banks are softened by continuous shoreline strokes.
+q.lineCap='round';for(let pass=0;pass<2;pass++){
+ q.beginPath();for(let y=0;y<=H;y+=8){let x=1390+Math.sin(y/240)*230+Math.sin(y/93)*25+(pass?30:-30);if(y===0)q.moveTo(x,y);else q.lineTo(x,y)}
+ q.lineWidth=pass?8:11;q.strokeStyle=pass?'rgba(192,197,131,.18)':'rgba(173,198,148,.24)';q.stroke();
+}
+// Decorative natural paths for the camera to discover.
+for(let j=0;j<1150;j++){
+ const x=seedRand(25,W-25),y=seedRand(25,H-25),t=cellAt(x,y);if(t.biome==='water')continue;
+ if(t.biome==='rock'){q.strokeStyle='rgba(35,49,43,.20)';q.lineWidth=seedRand(1,3);q.beginPath();q.moveTo(x,y);q.lineTo(x+seedRand(-19,19),y+seedRand(5,21));q.stroke()}
+ else{q.fillStyle=t.biome==='forest'?'#9cc38b38':'#d3bc7c22';q.beginPath();q.ellipse(x,y,seedRand(2,7),seedRand(1,4),seedRand(0,TAU),0,TAU);q.fill()}
+}
+// Soften artificial tile boundaries without losing the shape of rivers and forests.
+const smoothed=document.createElement('canvas');smoothed.width=W;smoothed.height=H;
+const sg=smoothed.getContext('2d');sg.filter='blur(17px)';sg.drawImage(c,0,0);
+q.clearRect(0,0,W,H);q.drawImage(smoothed,0,0);
+let edge=q.createRadialGradient(W/2,H/2,310,W/2,H/2,1800);edge.addColorStop(0,'#0000');edge.addColorStop(1,'#071d2180');q.fillStyle=edge;q.fillRect(0,0,W,H);
+}
+const particlesArr=[];
+function particles(x,y,color,n=10){for(let i=0;i<n;i++)particlesArr.push({x,y,vx:rnd(-75,75),vy:rnd(-105,25),life:rnd(.45,1.2),max:1.2,r:rnd(1.5,4),c:color})}
+function drawOrganicTree(g,x,y,s=1,seed=1){g.save();g.translate(x,y);g.scale(s,s);
+ const sway=Math.sin(frame*.00045+seed)*1.1;
+ g.fillStyle='#081d1c62';g.beginPath();g.ellipse(9,13,41,18,-.25,0,TAU);g.fill();
+ g.strokeStyle='#23392c';g.lineWidth=10;g.lineCap='round';g.beginPath();g.moveTo(0,10);g.quadraticCurveTo(-4,-24,sway,-46);g.stroke();
+ g.strokeStyle='#506047';g.lineWidth=2.2;g.beginPath();g.moveTo(-3,9);g.quadraticCurveTo(-9,-20,sway-3,-45);g.stroke();
+ const base=['#274f3d','#315e45','#37684c','#477458','#2d584a'];
+ for(let k=0;k<7;k++){
+  let dx=Math.sin(seed*18+k*2.39)*26,dy=-47+Math.cos(seed*13+k*2.14)*18;
+  g.fillStyle=base[Math.floor((seed*6+k)%base.length)];g.beginPath();g.ellipse(dx+sway,dy,25+(k%3)*4,18+(k%2)*5,Math.sin(k)*.4,0,TAU);g.fill();
+  g.strokeStyle='#a1bd8851';g.lineWidth=.7;g.beginPath();g.ellipse(dx+sway-4,dy-3,18+(k%2)*3,12,-.2,.4,2.4);g.stroke();
+ }
+ g.fillStyle='#cae5ad80';for(let k=0;k<9;k++){let ox=Math.sin(seed*12+k*1.78)*33,oy=-50+Math.cos(seed*8+k*1.43)*20;g.beginPath();g.ellipse(ox+sway,oy,2.6,1.5,-.3,0,TAU);g.fill()}
+ g.restore()}
+function drawStone(g,x,y,s=1,seed=0){g.save();g.translate(x,y);g.scale(s,s);g.fillStyle='#061d1c55';g.beginPath();g.ellipse(3,7,23,10,0,0,TAU);g.fill();g.fillStyle='#6f7a6b';g.beginPath();g.moveTo(-20,6);g.lineTo(-14,-13);g.lineTo(5,-21);g.lineTo(20,-8);g.lineTo(23,7);g.closePath();g.fill();g.fillStyle='#9fa18a';g.beginPath();g.moveTo(-14,-13);g.lineTo(5,-21);g.lineTo(4,0);g.lineTo(-18,4);g.closePath();g.fill();g.strokeStyle='#42574f';g.lineWidth=1.2;g.beginPath();g.moveTo(4,0);g.lineTo(12,9);g.lineTo(10,3);g.stroke();g.restore()}
+function drawPlant(g,p,highlight=false){if(p.food<9)return;let s=p.size*(.4+p.food/155),r=10*s,x=p.x,y=p.y;
+ g.save();g.translate(x,y);g.globalAlpha=clamp(p.food/65,.3,1);
+ g.fillStyle='#09211d50';g.beginPath();g.ellipse(1,5,r*1.4,r*.62,0,0,TAU);g.fill();
+ if(p.kind==='fungus'){
+  g.strokeStyle='#ddd8b0';g.lineWidth=2.6*s;g.beginPath();g.moveTo(0,6);g.lineTo(0,-7);g.stroke();let gg=g.createRadialGradient(-2,-10,0,0,-8,13*s);gg.addColorStop(0,'#d2bdf0');gg.addColorStop(1,'#725f96');g.fillStyle=gg;g.beginPath();g.ellipse(0,-8,13*s,6*s,0,Math.PI,TAU);g.closePath();g.fill();
+  g.fillStyle='#e7d9f4';for(let i=-1;i<=1;i++){g.beginPath();g.arc(i*5*s,-11*s,1.4*s,0,TAU);g.fill()}
+ }else{
+  const count=p.kind==='thorn'?4:p.kind==='fern'?7:5;
+  for(let i=0;i<count;i++){let a=i*TAU/count+p.seed*.5;g.fillStyle=p.kind==='thorn'?'#bdba83':p.kind==='fern'?'#83bb81':'#a3c986';g.save();g.rotate(a);g.beginPath();g.ellipse(0,-6*s,3.5*s,8.5*s,0,0,TAU);g.fill();g.restore()}
+  if(p.kind==='flower'){g.fillStyle='#efd8a0';g.beginPath();g.arc(0,0,3.8*s,0,TAU);g.fill()}
+ }
+ if(highlight){g.strokeStyle='#f6e7aa88';g.lineWidth=1.7;g.beginPath();g.arc(0,0,18*s+Math.sin(frame*.004+p.seed)*2,0,TAU);g.stroke();}
+ g.restore()}
+function roundedRect(g,x,y,w,h,r){if(typeof g.roundRect==='function'){g.beginPath();g.roundRect(x,y,w,h,r)}else{g.beginPath();g.rect(x,y,w,h)}}
+function drawBeing(g,a,scale=1,portrait=false){const own=a.kind==='player',sp=own?pathData[G?.path||startPath]:wildSpecies[a.kind],c=sp.color,ac=sp.accent,body=a.r*(portrait?1.22:1),t=frame*.006;
+ g.save();g.translate(a.x,a.y);g.scale(scale,scale);g.rotate(a.angle||0);
+ g.fillStyle='#06171888';g.beginPath();g.ellipse(3,body*.73,body*1.38,body*.57,-.2,0,TAU);g.fill();
+ if(own&&G?.playerId===a.id&&!portrait){g.strokeStyle='#dfd3a1';g.lineWidth=1.5;g.setLineDash([5,5]);g.beginPath();g.ellipse(0,body*.18,body*1.5,body*.9,0,0,TAU);g.stroke();g.setLineDash([])}
+ // Four animated limbs that flex with the creature's gait.
+ let feet=[[-.52,-.65],[.42,-.68],[-.52,.66],[.42,.62]],st=portrait?0:Math.sin(t*3.6+a.id)*4;
+ feet.forEach(([dx,dy],k)=>{let q=Math.sin(t*4+a.id+k*2.7)*st*.7;
+ g.strokeStyle='#162d2d';g.lineWidth=body*.31;g.lineCap='round';g.beginPath();g.moveTo(body*dx,body*dy*.7);g.quadraticCurveTo(body*(dx-.12),body*dy+q,body*(dx+.22),body*(dy+Math.sign(dy)*.3)+q);g.stroke();g.strokeStyle=c;g.lineWidth=body*.17;g.stroke();});
+ // Tail shape defines the silhouette.
+ g.strokeStyle=own?'#79624e':'#42544b';g.lineWidth=body*.28;g.beginPath();g.moveTo(-body*.56,0);g.bezierCurveTo(-body*1.2,body*.23,-body*1.15,-body*.6,-body*1.48,-body*.12);g.stroke();
+ if(a.kind==='stalker'||own&&G?.path==='hunter'){
+   g.fillStyle='#dcb9a2';g.beginPath();g.moveTo(-body*1.55,-body*.17);g.lineTo(-body*1.7,-body*.12);g.lineTo(-body*1.56,body*.08);g.fill()
+ }
+ if(a.kind==='moth'||own&&G?.path==='solar'){
+  for(let s of [-1,1]){g.fillStyle=own?'#9ccfaa9c':'#b6b3d4c2';g.beginPath();g.ellipse(-body*.3,s*body*.85,body*.95,body*.49,s*.53,0,TAU);g.fill();g.strokeStyle='#e5e8bc88';g.lineWidth=1;g.stroke()}
+ }
+ // Gradient shading gives volume instead of flat colored circles.
+ const grad=g.createRadialGradient(-body*.35,-body*.54,1,0,0,body*1.65);grad.addColorStop(0,'#efe6c2');grad.addColorStop(.26,c);grad.addColorStop(1,'#3f4e48');
+ g.fillStyle=grad;g.beginPath();g.ellipse(0,0,body*1.03,body*.79,0,0,TAU);g.fill();
+ if(a.kind==='shell'){
+  g.fillStyle='#637d62';g.beginPath();g.ellipse(-2,0,body*.82,body*.7,0,0,TAU);g.fill();g.strokeStyle='#b4caa0';g.lineWidth=2;for(let i=0;i<4;i++){g.beginPath();g.moveTo(-body*.5+i*body*.25,-body*.58);g.quadraticCurveTo(-body*.19+i*body*.2,0,-body*.5+i*body*.25,body*.59);g.stroke()}
+ }else if(a.kind==='stalker'){
+  g.strokeStyle='#ffe1c37d';g.lineWidth=3;for(let i=-1;i<=1;i++){g.beginPath();g.moveTo(-body*.2+i*4,-body*.56);g.lineTo(-body*.5+i*4,body*.53);g.stroke()}
+ }else if(a.kind==='glimmer'){
+  g.fillStyle='#c1eed6a4';for(let i=0;i<5;i++){let x=-body*.45+i*body*.28;g.beginPath();g.arc(x,Math.sin(i*1.7)*body*.32,body*.15,0,TAU);g.fill()}
+ }else if(own){
+  g.fillStyle=ac+'a0';g.beginPath();g.ellipse(-body*.15,-body*.22,body*.63,body*.43,.2,0,TAU);g.fill();
+  if(G?.genes.hands){g.strokeStyle=ac;g.lineWidth=3;g.beginPath();g.moveTo(body*.1,-body*.7);g.lineTo(body*.7,-body*1.06);g.moveTo(body*.1,body*.7);g.lineTo(body*.7,body*1.06);g.stroke()}
+ }
+ // Neck and distinct creature faces.
+ g.fillStyle=c;g.beginPath();g.ellipse(body*.64,0,body*.61,body*.57,0,0,TAU);g.fill();
+ let faces=own&&G?.path==='hunter'||a.kind==='stalker';
+ if(faces){g.fillStyle='#eec8af';g.beginPath();g.moveTo(body*.95,-body*.28);g.quadraticCurveTo(body*1.65,0,body*.95,body*.32);g.closePath();g.fill();g.fillStyle='#fff5de';g.beginPath();g.moveTo(body*1.22,body*.08);g.lineTo(body*1.36,body*.2);g.lineTo(body*1.18,body*.23);g.fill()}
+ if(own&&G?.path==='symbiote'||a.kind==='moth'){
+  for(let i=0;i<4;i++){g.fillStyle=i%2?'#c7b0cf':'#9bc7c2';g.beginPath();g.ellipse(-body*.4+i*body*.23,-body*.65,body*.13,body*.27,(i-2)*.4,0,TAU);g.fill()}
+ }
+ for(let s of [-1,1]){
+  g.fillStyle=own?'#e9d9af':'#b8cbb1';g.beginPath();g.ellipse(body*.76,s*body*.25,body*.15,body*.21,0,0,TAU);g.fill();
+  g.fillStyle='#112b32';g.beginPath();g.arc(body*.81,s*body*.26,body*.08,0,TAU);g.fill();g.fillStyle='#fff7e4';g.beginPath();g.arc(body*.85,s*body*.29,body*.032,0,TAU);g.fill();
+ }
+ if(own&&G?.genes.mind>=2){g.strokeStyle='#e2e5b0';g.lineWidth=1.8;g.beginPath();g.arc(body*.52,0,body*.78,-1,1);g.stroke()}
+ if(a.flash>0){g.globalAlpha=clamp(a.flash*1.7,0,.6);g.fillStyle='#ffeab0';g.beginPath();g.ellipse(0,0,body*1.12,body*.85,0,0,TAU);g.fill()}
+ g.restore();
+}
+function drawCamp(g,t){g.save();g.translate(t.x,t.y);
+ let area=g.createRadialGradient(0,0,15,0,0,240);area.addColorStop(0,'#d8aa5b2f');area.addColorStop(1,'#e8ca8f00');g.fillStyle=area;g.beginPath();g.arc(0,0,240,0,TAU);g.fill();
+ g.fillStyle='#826c4f';g.beginPath();g.ellipse(0,0,105,55,-.2,0,TAU);g.fill();g.strokeStyle='#c5ac7766';g.lineWidth=2;g.stroke();
+ for(let i=0;i<t.buildings+1;i++){let x=Math.sin(i*2.19+.3)*95,y=Math.cos(i*1.93)*57-10;
+  g.fillStyle='#20312a90';g.beginPath();g.ellipse(x+4,y+16,29,13,0,0,TAU);g.fill();g.fillStyle='#c9b18a';g.beginPath();g.moveTo(x-25,y+14);g.lineTo(x,y-29);g.lineTo(x+26,y+14);g.closePath();g.fill();g.fillStyle='#795b47';g.beginPath();g.moveTo(x-22,y+14);g.lineTo(x,y-21);g.lineTo(x,y+14);g.closePath();g.fill();g.strokeStyle='#514932';g.lineWidth=2;g.stroke()}
+ g.fillStyle='#1b2524';g.beginPath();g.ellipse(0,13,25,11,0,0,TAU);g.fill();let flame=Math.sin(frame*.009)*5;g.fillStyle='#d66c32';g.beginPath();g.moveTo(-12,11);g.quadraticCurveTo(-18,-15,0,-25-flame);g.quadraticCurveTo(17,-9,11,10);g.fill();g.fillStyle='#f6d38b';g.beginPath();g.moveTo(-6,9);g.quadraticCurveTo(-8,-5,0,-14-flame*.7);g.quadraticCurveTo(7,-5,7,10);g.fill();
+ if(G?.research.farm){g.fillStyle='#d6c278bb';for(let j=0;j<5;j++)for(let i=0;i<7;i++){g.save();g.translate(137+i*9,-42+j*13);g.rotate(-.4);g.beginPath();g.ellipse(0,0,2,6,-.3,0,TAU);g.fill();g.restore()}}
+ if(G?.research.stars){g.fillStyle='#a5babb';g.fillRect(-14,-82,28,72);g.fillStyle='#4e6c74';g.fillRect(-19,-91,38,17);g.save();g.translate(0,-102);g.rotate(-.3);g.fillStyle='#e8dcc6';g.fillRect(-13,-16,26,32);g.restore()}
+ g.strokeStyle='#eccf9e91';g.lineWidth=2.2;g.beginPath();g.arc(0,0,116,0,TAU);g.stroke();g.restore();
+}
+function drawWorld(){if(!G)return;let w=dims.w,h=dims.h,dpr=dims.dpr;ctx.setTransform(dpr,0,0,dpr,0,0);ctx.fillStyle='#0c2027';ctx.fillRect(0,0,w,h);
+ const z=cam.zoom,viewW=w/z,viewH=h/z,ox=cam.x-viewW/2,oy=cam.y-viewH/2;
+ ctx.save();ctx.translate(w/2,h/2);ctx.scale(z,z);ctx.translate(-cam.x,-cam.y);
+ if(mapCanvas)ctx.drawImage(mapCanvas,0,0);
+ // Seasonal color shifts and rare environmental catastrophes.
+ if(G.incident?.type==='ash'){ctx.fillStyle='rgba(73,72,80,.20)';ctx.fillRect(0,0,W,H)}
+ if(G.incident?.type==='drought'){ctx.fillStyle='rgba(176,122,59,.09)';ctx.fillRect(0,0,W,H)}
+ if(G.incident?.type==='bloom'){ctx.fillStyle='rgba(84,151,96,.11)';ctx.fillRect(0,0,W,H)}
+ const margin=130;
+ for(const p of plants){if(p.x<ox-margin||p.x>ox+viewW+margin||p.y<oy-margin||p.y>oy+viewH+margin)continue;let player=controlled();drawPlant(ctx,p,mode==='creature'&&player&&dist(p,player)<90&&p.food>14)}
+ let propsVisible=props.filter(p=>p.x>ox-margin&&p.x<ox+viewW+margin&&p.y>oy-margin&&p.y<oy+viewH+margin).sort((a,b)=>a.y-b.y);
+ for(const p of propsVisible){if(p.type==='tree')drawOrganicTree(ctx,p.x,p.y,p.s,p.seed);else if(p.type==='stone')drawStone(ctx,p.x,p.y,p.s,p.seed);else{ctx.save();ctx.translate(p.x,p.y);ctx.fillStyle='#9b996a';for(let i=0;i<5;i++){ctx.beginPath();ctx.ellipse(Math.sin(i*2)*11,Math.cos(i*3)*7,6*p.s,12*p.s,i*.8,0,TAU);ctx.fill()}ctx.restore()}}
+ if(G.tribe)drawCamp(ctx,G.tribe);
+ for(const a of G.actors){if(a.dead||a.x<ox-margin||a.x>ox+viewW+margin||a.y<oy-margin||a.y>oy+viewH+margin)continue;drawBeing(ctx,a);
+  if((G.path==='hunter'&&mode==='creature'&&controlled()&&dist(a,controlled())<230&&(a.kind==='glimmer'||a.kind==='shell'||a.kind==='moth'))){ctx.fillStyle='#142329';ctx.fillRect(a.x-18,a.y-29,36,5);ctx.fillStyle='#ee9d8c';ctx.fillRect(a.x-18,a.y-29,36*Math.max(0,a.hp)/100,5)}
+  if(a.hp<65&&a.kind==='player'&&a.id!==G.playerId){ctx.fillStyle='#0e1e1d';ctx.fillRect(a.x-12,a.y-25,24,3);ctx.fillStyle='#e39c8b';ctx.fillRect(a.x-12,a.y-25,24*a.hp/100,3)}
+ }
+ for(let i=particlesArr.length-1;i>=0;i--){const p=particlesArr[i];ctx.globalAlpha=clamp(p.life/p.max,0,1);ctx.fillStyle=p.c;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,TAU);ctx.fill()}ctx.globalAlpha=1;
+ // Sunlight, auroras, shore glow.
+ let light=ctx.createRadialGradient(cam.x-450,cam.y-350,100,cam.x-450,cam.y-350,1600);light.addColorStop(0,'#f7d39a09');light.addColorStop(1,'#2036410a');ctx.fillStyle=light;ctx.fillRect(ox,oy,viewW,viewH);
+ ctx.restore();
+ // Species-aware training / perception. Mark only ONE relevant nearby target.
+ if(mode==='creature'&&controlled()){
+  const me=controlled(),extra=G.genes.senses*155,show=G.meals<3||G.genes.senses>0;
+  let goal=null,label='',color='#b5e6ae';
+  if(G.path==='hunter'){goal=nearestPrey(me,420+extra);label='PREY';color='#f7aaa2'}
+  else if(G.path==='grazer'){goal=nearestUsableFood(me,410+extra);label='FOOD';color='#ade7b3'}
+  else if(G.path==='symbiote'){goal=nearestUsableFood(me,420+extra);label='FUNGUS';color='#d5b3f3';
+   if(!goal&&cellAt(me.x,me.y).biome==='forest'){goal=me;label='FOREST · FEED HERE'}}
+  else {goal=me;label=G.temp>8&&G.temp<35&&G.incident?.type!=='ash'?'SUNLIGHT · FEED HERE':'WAIT FOR LIGHT';color='#f6df97'}
+  if(show&&goal){const xx=(goal.x-cam.x)*z+w/2,yy=(goal.y-cam.y)*z+h/2;
+   if(xx>-40&&xx<w+40&&yy>-40&&yy<h+40){ctx.save();ctx.strokeStyle=color;ctx.lineWidth=2;ctx.setLineDash([6,5]);ctx.beginPath();ctx.arc(xx,yy,G.path==='hunter'?27:23,0,TAU);ctx.stroke();ctx.setLineDash([]);
+    ctx.fillStyle='rgba(7,26,29,.86)';roundedRect(ctx,xx-68,yy-65,136,24,8);ctx.fill();ctx.fillStyle=color;ctx.font='bold 12px system-ui';ctx.textAlign='center';ctx.fillText(label,xx,yy-49);ctx.restore();}
+  }
+ }
+ // Screen-space navigation and ecosystem cues.
+ if(mode==='creature'){let a=controlled();if(a){let x=(a.x-cam.x)*z+w/2,y=(a.y-cam.y)*z+h/2;
+  if(a.hunger<30){ctx.fillStyle='rgba(20,37,38,.86)';roundedRect(ctx,x-48,y-70,96,24,7);ctx.fill();ctx.fillStyle='#f7d499';ctx.font='700 11px Outfit,Arial';ctx.textAlign='center';ctx.fillText('⚠ HUNGRY',x,y-54)}
+ }}
+ if(G.incident){ctx.textAlign='center';ctx.font='700 12px Outfit,Arial';ctx.fillStyle='#ffdfa9';ctx.fillText(`${G.incident.type.toUpperCase()} • ${Math.max(0,Math.ceil(G.incident.until-G.year))} years remain`,w/2,81)}
+}
+function drawHero(){const c=$('heroCanvas'),g=c.getContext('2d'),w=c.width,h=c.height;
+ let b=g.createLinearGradient(0,0,0,h);b.addColorStop(0,'#0b1b2a');b.addColorStop(.45,'#1c3b41');b.addColorStop(1,'#071d24');g.fillStyle=b;g.fillRect(0,0,w,h);
+ rngSeed=hashString('hero');for(let i=0;i<290;i++){let x=seedRand(0,w),y=seedRand(0,h*.82),r=seedRand(.2,2);g.fillStyle=seedRand(0,1)>.6?'#ffe0aa':'#b6e3e0';g.globalAlpha=seedRand(.2,.95);g.beginPath();g.arc(x,y,r,0,TAU);g.fill()}g.globalAlpha=1;
+ let glow=g.createRadialGradient(430,325,25,430,325,320);glow.addColorStop(0,'#95f0d460');glow.addColorStop(.43,'#89d7c023');glow.addColorStop(1,'#0000');g.fillStyle=glow;g.beginPath();g.arc(430,325,323,0,TAU);g.fill();
+ g.save();g.beginPath();g.arc(428,326,228,0,TAU);g.clip();let grad=g.createRadialGradient(345,230,17,450,350,265);grad.addColorStop(0,'#a9baa3');grad.addColorStop(.36,'#6e9b83');grad.addColorStop(.7,'#346464');grad.addColorStop(1,'#0f2839');g.fillStyle=grad;g.fillRect(180,90,500,500);
+ for(let i=0;i<75;i++){let x=seedRand(160,680),y=seedRand(95,565),rr=seedRand(15,110);g.fillStyle=i%2?'#315f6670':'#ced9a02e';g.beginPath();g.ellipse(x,y,rr,rr*.32,seedRand(-1,1),0,TAU);g.fill()}
+ for(let i=0;i<16;i++){g.strokeStyle='#e5e8c01c';g.lineWidth=seedRand(2,11);g.beginPath();let x=180+i*27;g.moveTo(x,150);g.bezierCurveTo(x+80,205,x-90,400,x+100,515);g.stroke()}
+ g.restore();g.strokeStyle='#d8efc999';g.lineWidth=4;g.beginPath();g.arc(428,326,229,0,TAU);g.stroke();
+ // A nascent creature perches below the planet.
+ g.save();g.translate(315,584);g.scale(3.8,3.8);drawBeing(g,{kind:'player',x:0,y:0,angle:-.3,id:2,r:17,flash:0},1,true);g.restore();
+ const land=g.createLinearGradient(0,600,0,h);land.addColorStop(0,'#142e2b');land.addColorStop(1,'#07151b');g.fillStyle=land;g.beginPath();g.moveTo(0,650);g.quadraticCurveTo(180,565,385,665);g.quadraticCurveTo(570,598,850,630);g.lineTo(w,h);g.lineTo(0,h);g.closePath();g.fill();
+ for(let i=0;i<15;i++){g.fillStyle=i%2?'#1a4034':'#23463b';g.beginPath();let x=i*69+seedRand(-40,40),y=seedRand(610,750);g.moveTo(x-30,y+45);g.lineTo(x,y-80);g.lineTo(x+35,y+50);g.fill()}
+}
+function render(time){if(!lastTime)lastTime=time;let dt=clamp((time-lastTime)/1000,0,.05);lastTime=time;frame=time;
+ if(G){
+  if(!paused&&!dialogOpen&&!G.screenEnd){
+   let dx=0,dy=0;if(keys.KeyW||keys.ArrowUp)dy--;if(keys.KeyS||keys.ArrowDown)dy++;if(keys.KeyA||keys.ArrowLeft)dx--;if(keys.KeyD||keys.ArrowRight)dx++;
+   dx+=joy.x;dy+=joy.y;
+   if(mode==='creature')steer(dx,dy,dt);
+   else{cam.x=clamp(cam.x+dx*dt*340,0,W);cam.y=clamp(cam.y+dy*dt*340,0,H)}
+   if(mobileActionHeld&&time-(G.lastAction||0)>420){act();G.lastAction=time}
+   simAcc+=dt;if(G.meals===0)simAcc=0;while(simAcc>.15&&!dialogOpen){runSimulation(.15*(G.speed||1));simAcc-=.15;
+    for(const a of G.actors)speciesAI(a,.15*(G.speed||1))}
+  }
+  if(mode==='creature'&&controlled()&&!dialogOpen){cam.x=lerp(cam.x,controlled().x,.07);cam.y=lerp(cam.y,controlled().y,.07)}
+  cam.x=clamp(cam.x,0,W);cam.y=clamp(cam.y,0,H);
+  for(let i=particlesArr.length-1;i>=0;i--){let p=particlesArr[i];p.x+=p.vx*dt;p.y+=p.vy*dt;p.vy+=100*dt;p.life-=dt;if(p.life<=0)particlesArr.splice(i,1)}
+  drawWorld();updateTimer+=dt;
+  if(updateTimer>.7){refreshHUD();if(updateTimer>1.45){refreshSidebar();refreshLog();updateTimer=0}}
+ }else{ctx.setTransform(dims.dpr,0,0,dims.dpr,0,0);ctx.fillStyle='#0d2629';ctx.fillRect(0,0,dims.w,dims.h)}
+ requestAnimationFrame(render)
+}
+function resize(){dims.w=window.innerWidth;dims.h=window.innerHeight;dims.dpr=Math.min(window.devicePixelRatio||1,1.8);cv.width=Math.floor(dims.w*dims.dpr);cv.height=Math.floor(dims.h*dims.dpr);cv.style.width=dims.w+'px';cv.style.height=dims.h+'px';if(G){cam.zoom=dims.w<650?(dims.w<dims.h?1.48:1.32):dims.w<1000?1.26:1.12}}
+window.addEventListener('resize',resize);
+const missions=[
+ {title:'The first meal',text:'Find nourishment using your species’ unique diet. Follow the pulsing on-screen target.',tip:'Use the left stick / WASD, then EAT, HUNT, or FEED',check:()=>G.meals>0,progress:()=>G.meals?1:0},
+ {title:'A lineage takes root',text:'Let generations pass and grow your species to at least 16 living individuals. Press the time-speed button to accelerate evolution.',tip:'Your lineage reproduces when well-fed and safe',check:()=>G.population>=16,progress:()=>clamp(G.population/16,0,1)},
+ {title:'A curious mind',text:'Spend Evolution Insight on Neural Bloom until cognition reaches level 2. Feed, reproduce, and survive to earn insight.',tip:'Open EVOLVE to buy Neural Bloom',check:()=>G.genes.mind>=2,progress:()=>G.genes.mind/2},
+ {title:'The first language',text:'Evolve Kinship Calls to level 2 so your descendants can cooperate and communicate.',tip:'Increase Kinship Calls to level 2',check:()=>G.genes.social>=2,progress:()=>G.genes.social/2},
+ {title:'Hands that can create',text:'Evolve Grasping Limbs at least once. A mind and social bonds are not enough without the ability to manipulate tools.',tip:'Evolve Grasping Limbs • maintain 12+ survivors',check:()=>G.genes.hands>=1,progress:()=>G.genes.hands>=1?1:0},
+ {title:'The first tribe',text:'Preserve at least 12 descendants with intelligence, cooperation, and grasping limbs. A settlement will form automatically.',tip:'Life + intelligence + social bonds + grasping limbs',check:()=>!!G.tribe,progress:()=>G.tribe?1:clamp(G.population/12,0,1)*.7},
+ {title:'The gift of fire',text:'Your tribe needs food, wood, stone, and knowledge. Choose priorities and discover Firecraft in the settlement panel.',tip:'Switch priorities to gather what you need',check:()=>!!G.research.fire,progress:()=>G.research.fire?1:G.tribe?Math.min(1,G.tribe.knowledge/15):0},
+ {title:'Fields that feed a nation',text:'Discover Cultivation. Farms let your growing community feed more inhabitants and withstand difficult seasons.',tip:'Research Cultivation after Firecraft',check:()=>!!G.research.farm,progress:()=>G.research.farm?1:G.tribe?Math.min(1,G.tribe.knowledge/38):0},
+ {title:'Memory beyond a lifetime',text:'Discover Written Memory. Ideas can now outlive their inventors, allowing your civilization to accumulate knowledge.',tip:'Research Written Memory after Cultivation',check:()=>!!G.research.writing,progress:()=>G.research.writing?1:G.tribe?Math.min(1,G.tribe.knowledge/78):0},
+ {title:'Look toward the stars',text:'Gather enough resources to construct an Observatory. The first chapter ends when your descendants see the universe for themselves.',tip:'Unlock the Observatory in the settlement panel',check:()=>!!G.research.stars,progress:()=>G.research.stars?1:G.tribe?Math.min(1,G.tribe.knowledge/145):0}
+];
+function updateMission(){if(!G)return;let previous=G.tutorial||0;while((G.tutorial||0)<missions.length&&missions[G.tutorial].check())G.tutorial++;
+ if(G.tutorial>previous){for(let i=previous;i<G.tutorial;i++){if(i<missions.length-1)toast(`<b>CHAPTER COMPLETE</b> · ${missions[i].title}`)}refreshHUD();
+ if(previous<=1&&G.tutorial>=2&&G.geneBought>0)lessonOnce('population','A GROWING LINEAGE',`<div class="tutorialStep">LESSON 4 · NEW LIVES</div><p>Your population has grown. You do not need to control every individual: they forage, hunt, grow older and reproduce on their own.</p><p>You can follow a descendant after your current organism dies. Your species survives as long as some individuals remain.</p><div class="tutorialTip">Your longer-term goal: evolve <b>Neural Bloom 2</b>, <b>Kinship Calls 2</b>, and <b>Grasping Limbs 1</b> while keeping at least 12 members alive. That is how the first tribe begins.</div>`);
+ }
+}
+function refreshHUD(){if(!G)return;
+ $('topYear').textContent='Year '+Math.floor(G.year).toLocaleString();$('topSeason').textContent=seasonName();$('topTemp').textContent=Math.round(G.temp)+'°C';$('topPop').textContent=G.population;
+ $('pauseBtn').textContent=paused?'▶':'Ⅱ';$('speedBtn').textContent=(G.speed||1)+'×';
+ $('pauseBtn').classList.toggle('on',paused);$('speedBtn').disabled=G.meals<1||G.geneBought<1;$('speedBtn').title=$('speedBtn').disabled?'Eat once and buy your first adaptation to unlock faster time':'Change simulation speed';
+ const stage=clamp(G.tutorial,0,missions.length-1),m=missions[stage];
+ $('missionStep').textContent=String(Math.min(stage+1,missions.length)).padStart(2,'0')+' / '+missions.length;
+ $('missionTitle').textContent=G.tutorial>=missions.length?'Beyond the horizon':m.title;
+ $('missionText').textContent=G.tutorial>=missions.length?'Your lineage has taken its first steps toward the stars. You may continue shaping its world.':m.text;
+ $('missionTip').textContent=G.tutorial>=missions.length?'The first chapter is complete':m.tip;
+ let n=G.tutorial>=missions.length?1:m.progress();$('missionFill').style.width=Math.round(n*100)+'%';$('missionPct').textContent=Math.round(n*100)+'%';
+ $('creatureMode').classList.toggle('sel',mode==='creature');$('observerMode').classList.toggle('sel',mode==='observer');$('rightToggle').textContent=G.era==='life'?'✦ EVOLVE':'⌂ TRIBE';
+ $('touchActionLabel').textContent=G.path==='hunter'?'HUNT':G.path==='solar'?'LIGHT':G.path==='symbiote'?'FUNGI':'EAT';
+ const pp=controlled();$('survivalStatus').textContent=`♥ ${pp?Math.ceil(pp.hp):0} health · ◉ ${pp?Math.ceil(pp.hunger):0} food · ✧ ${Math.floor(G.ep)} insight`;
+}
+function refreshLog(){if(!G)return;$('logLines').innerHTML=G.history.slice(0,3).map(e=>`<div class="entry"><b>Year ${e.year} · ${escapeHtml(e.title)}</b><br>${escapeHtml(e.text).slice(0,140)}</div>`).join('')}
+function escapeHtml(s){return String(s||'').replace(/[&<>"']/g,a=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[a]))}
+function geneExplainer(id){return {
+ mind:'More insight from survival and faster settlement learning.',social:'Find mates over longer distances; cooperation builds.',hands:'Stronger Hunter attacks; improves future building.',hide:'Less damage from enemies; longer natural lifespan.',legs:'Move 14% faster per level.',forage:'More food from every successful feeding.',senses:'Highlights the nearest food or prey from farther away.',brood:'Increases the chance that a well-fed adult produces offspring.'}[id]||''}
+function exactGeneEffect(g){let lv=G.genes[g.id],n=lv+1;
+ const m={mind:`Insight gain: +${lv*12}% → +${n*12}%. Later, tribal knowledge gain also improves. Required for civilization: level 2.`,social:`Mate-finding radius: ${420+lv*130} → ${420+n*130} world units. Helps isolated members find mates. Required for civilization: level 2.`,hands:`Hunter bite damage: ${36+lv*8+G.genes.hide*3} → ${36+n*8+G.genes.hide*3}; later tribe building materials +${lv*15}% → +${n*15}%. Civilization needs level 1.`,hide:`Incoming injury multiplier: ${Math.round(100*(1-lv*.17))}% → ${Math.round(100*(1-n*.17))}%; lifespan: ${36+lv*4} → ${36+n*4} years.`,legs:`Movement speed: +${lv*14}% → +${n*14}%.`,forage:`Food restored from actions: +${lv*9} → +${n*9} points (hunts included).`,senses:`Nearest usable target automatically marked; detection radius grows by 155 units per level. Current bonus ${lv*155} → ${n*155}.`,brood:`Offspring success chance gets another +14 percentage points (before caps and environmental penalties).`};return m[g.id]||''}
+function explainGene(id){if(!G||G.era!=='life')return;const g=genes.find(x=>x.id===id);if(!g)return;const lv=G.genes[id],cost=genealogyCost(g),ready=lv<g.max&&G.ep>=cost;
+ const msg=`<div class="tutorialStep">ADAPTATION GUIDE · LEVEL ${lv} / ${g.max}</div><p><b>${escapeHtml(g.name)}</b>: ${escapeHtml(g.text)}.</p><div class="tutorialTip">${lv>=g.max?'This adaptation is already at its maximum level.':escapeHtml(exactGeneEffect(g))}</div><p>Cost: <b>${lv>=g.max?'MAX':cost+' ✧'}</b> · Your available insight: <b>${Math.floor(G.ep)} ✧</b>. ${!ready&&lv<g.max?'Keep feeding, hunting, and surviving to earn the rest.':''}</p><p>Nothing is purchased until you press the confirmation button.</p>`;
+ const buttons=[{label:'BACK TO EVOLUTION',primary:!ready,run:showEvolutionPanel}];if(ready)buttons.unshift({label:`EVOLVE FOR ${cost} ✧`,primary:true,run:()=>{buyGene(id);if(!dialogOpen)showEvolutionPanel()}});
+ openDialogue(g.symbol+' '+g.name.toUpperCase(),msg,buttons)
+}
+function showEvolutionPanel(){if(!G)return;dialogOpen=false;$('dialogOverlay').classList.add('hidden');$('side').classList.remove('hidden');if(isTouchLayout()){$('side').classList.add('open');sideVisible=true}else{sideVisible=true}refreshSidebar()}
+function refreshSidebar(){if(!G)return;
+ const panel=$('sideContent'),path=pathData[G.path],p=controlled();$('sideTitle').textContent=G.tribe?'People & Progress':'Evolution';
+ let b=`<div class="speciesBanner"><div class="speciesPortrait"><canvas id="speciesAvatar" width="120" height="120"></canvas></div><div><strong>${path.name}</strong><small>${path.sub}</small><br><small style="color:var(--aqua)">${G.era==='life'?'Living species':'Awakened society'} · ${G.population} individuals</small></div></div>`;
+ if(G.era==='life'){
+  b+=`<div class="meters"><div class="meter"><div class="value">${Math.floor(G.ep)} <b>✧</b></div><small>Evolution Insight</small></div><div class="meter"><div class="value">${p?Math.round(p.hunger):'—'}%</div><small>Current hunger</small></div><div class="meter"><div class="value">${population('stalker')}</div><small>Competing predators</small></div><div class="meter"><div class="value">${Math.round(G.temp)}°C</div><small>Planet temperature</small></div></div>`;
+  b+=`<div class="geneGuide"><strong>What is Evolution Insight?</strong><br>✧ points come from eating, successful hunts, reproduction, and surviving through the years. Spend them to improve every future descendant. <b>Tap any adaptation to see exactly what it changes before buying.</b></div>`;
+  const featured=G.geneBought<1?({hunter:['hide','hands','legs'],grazer:['forage','social','legs'],solar:['forage','hide','senses'],symbiote:['forage','hide','social']}[G.path]):['mind','social','hands'];
+  const chosen=G.showAllGenes?genes:genes.filter(g=>featured.includes(g.id));
+  b+=`<div class="sectionLine"><b>${G.showAllGenes?'All eight adaptations':G.geneBought<1?'Recommended first':'Civilization goals'}</b><span>✧ ${Math.floor(G.ep)} available</span></div><div class="geneGrid">`;
+  b+=chosen.map(g=>{let lv=G.genes[g.id],cost=genealogyCost(g);return `<button class="gene ${featured.includes(g.id)?'focusGene':''}" data-gene="${g.id}"><div class="geneTop"><span class="geneIcon">${g.symbol}</span><span class="cost">${lv>=g.max?'MAX LEVEL':cost+' ✧'}</span></div><strong>${g.name} · Lv ${lv}/${g.max}</strong><small class="geneDesc">${geneExplainer(g.id)}</small><small class="nextLevel">TAP FOR EXACT EFFECT</small></button>`}).join('')+'</div>';
+  b+=`<button class="wideBtn alt" id="showAllGenes">${G.showAllGenes?'Show recommended three':'SEE ALL 8 ADAPTATIONS & EXPLANATIONS'}</button>`;
+  b+=`<div class="sectionLine"><b>Consciousness threshold</b><span>${G.population}/12 alive</span></div><div class="smallInfo">To form the first tribe: Neural Bloom <b>${G.genes.mind}/2</b>, Kinship Calls <b>${G.genes.social}/2</b>, Grasping Limbs <b>${G.genes.hands}/1</b>, and at least 12 survivors. Your species can evolve other traits first.</div>`;
+ }else{
+  let t=G.tribe;
+  b+=`<div class="meters"><div class="meter"><div class="value">${Math.floor(t.food)}</div><small>Food stores</small></div><div class="meter"><div class="value">${Math.floor(t.wood)}</div><small>Wood</small></div><div class="meter"><div class="value">${Math.floor(t.stone)}</div><small>Stone</small></div><div class="meter"><div class="value">${Math.floor(t.knowledge)}</div><small>Knowledge</small></div></div>`;
+  b+=`<div class="sectionLine"><b>Your people's priority</b><span>${Math.floor(t.morale)}% morale</span></div><div class="geneGrid">`;
+  for(const [id,ico,label,tip]of [['forage','❀','Gather','More food'],['build','⌂','Construct','More wood and stone'],['study','✧','Learn','More knowledge']])b+=`<button class="gene ${t.mode===id?'':''}" data-policy="${id}" style="${t.mode===id?'border-color:#e2c78b;background:#3c5650':''}"><div class="geneIcon">${ico}</div><strong>${label}</strong><small>${tip}</small></button>`;
+  b+='</div><div class="sectionLine"><b>Discoveries</b><span>Choose your path</span></div>';
+  for(let r of research){const ready=!r.req||G.research[r.req],done=G.research[r.id],afford=Object.entries(r.cost).every(([k,n])=>t[k]>=n);
+   b+=`<button class="gene" style="width:100%;min-height:84px;margin-bottom:7px;${done?'border-color:#b2d8a1;background:#2b5147':''}" data-research="${r.id}" ${done||!ready||!afford?'disabled':''}><div class="geneTop"><span class="geneIcon">${r.mark}</span><span class="cost">${done?'DISCOVERED':!ready?'LOCKED':Object.entries(r.cost).map(([k,v])=>k[0].toUpperCase()+v).join(' · ')}</span></div><strong>${r.name}</strong><small>${r.desc}</small></button>`;
+  }
+  b+=`<div class="smallInfo">Your villagers work automatically. Their priorities and living conditions determine how quickly the settlement develops. Severe disasters can interrupt progress.</div>`;
+ }
+ b+=`<button class="wideBtn alt" id="ecologyButton">◈ Inspect living ecosystem</button><button class="wideBtn alt" id="chronicleButton">▤ Open the world chronicle</button>`;
+ panel.innerHTML=b;
+ const ac=$('speciesAvatar');if(ac){const g=ac.getContext('2d');g.clearRect(0,0,120,120);if(p){const dummy={...p,x:60,y:64,r:23,angle:-.18,flash:0};drawBeing(g,dummy,1.5,true)}}
+ panel.querySelectorAll('[data-gene]').forEach(btn=>btn.addEventListener('click',()=>explainGene(btn.dataset.gene)));
+ $('showAllGenes')?.addEventListener('click',()=>{G.showAllGenes=!G.showAllGenes;refreshSidebar()});
+ panel.querySelectorAll('[data-policy]').forEach(btn=>btn.addEventListener('click',()=>changePolicy(btn.dataset.policy)));
+ panel.querySelectorAll('[data-research]').forEach(btn=>btn.addEventListener('click',()=>buyResearch(btn.dataset.research)));
+ $('ecologyButton')?.addEventListener('click',showEcology);
+ $('chronicleButton')?.addEventListener('click',showChronicle);
+}
+function refreshAll(){if(!G)return;for(let id of ['hudTop','objective','side','bottom','touch','log','mapButton','rightToggle'])$(id).classList.remove('hidden');$('screen').classList.add('hidden');$('side').classList.remove('open');refreshHUD();refreshSidebar();refreshLog();resize();}
+function openDialogue(title,body,buttons=[]){dialogOpen=true;const content=$('dialogContent');content.innerHTML=`<div class="eyebrow">GENESIS TO THE STARS</div><h2>${title}</h2><p>${body}</p><div id="dialogExtra"></div><div class="dialogButtons" id="dialogBtns"></div>`;
+ const buttonsDiv=$('dialogBtns');for(let obj of buttons){let b=document.createElement('button');b.textContent=obj.label;if(obj.primary)b.classList.add('primary');b.addEventListener('click',()=>{closeDialogue();obj.run?.()});buttonsDiv.appendChild(b)}
+ if(!buttons.length){let b=document.createElement('button');b.textContent='Return to the world';b.className='primary';b.addEventListener('click',closeDialogue);buttonsDiv.appendChild(b)}
+ $('dialogOverlay').classList.remove('hidden');}
+function closeDialogue(){dialogOpen=false;$('dialogOverlay').classList.add('hidden')}
+function showMilestone(title,text,button='Continue'){openDialogue(title,text,[{label:button,primary:true}])}
+const firstSteps={
+ hunter:{name:'HUNTER',text:'You eat <b>other animals</b>, not plants. Look for the red <b>PREY</b> marker. Walk near a green Glimmerling or a Shellback, then press HUNT repeatedly until its health reaches zero. A successful kill feeds you.',tip:'Avoid Duskstalkers at first. They are rival predators. Your starting area has nearby prey and no immediate stalker.'},
+ grazer:{name:'FORAGER',text:'You eat <b>plants</b>. Look for the green <b>FOOD</b> marker above a glowing plant. Walk close and press EAT. Stay away from red Duskstalkers.',tip:'Eating restores food and earns ✧ Evolution Insight.'},
+ solar:{name:'SUNBORN',text:'You feed from <b>sunlight</b>. You do not need to eat plants or animals. While the temperature is comfortable and the sky is clear, press LIGHT to refill your energy.',tip:'Volcanic ash and extreme temperatures can block photosynthesis later.'},
+ symbiote:{name:'SYMBIOTE',text:'You feed through <b>fungal partners</b>. Look for a purple <b>FUNGUS</b> marker, move close, and press FUNGI. You can also absorb nutrients and heal when standing inside the forest.',tip:'Ordinary flowers are not edible for this species. Seek fungi or wooded terrain.'}
+};
+function showIntro(){const f=firstSteps[G.path];lessonOnce('welcome',`WELCOME, ${f.name}`,`<div class="tutorialStep">LESSON 1 OF 4 · SURVIVE</div><p>You control one ancestor of the <b>${pathData[G.path].name}</b> species. Other creatures are living their own lives, even when you do not command them.</p><p>${f.text}</p><div class="tutorialTip">${f.tip}<br><br><b>Move:</b> WASD / arrow keys, or the left phone joystick.<br><b>Use your food action:</b> Space or the large button on the right of your phone.</div><p><b>The game is paused while this explanation is open.</b> Your first goal is just one meal. More systems will be introduced gradually.</p>`,[{label:'I UNDERSTAND · LET ME TRY',primary:true}])}
+function showHelp(){if(!G)return;const f=firstSteps[G.path];openDialogue('HOW TO PLAY · '+f.name,`<div class="tutorialStep">THE BASICS</div><p>${f.text}</p><div class="tutorialTip">${f.tip}</div><p><b>Survive:</b> Keep your food and health above zero. If this body dies, control passes to another living member of your species.</p><p><b>Evolution:</b> Gain ✧ Evolution Insight from feeding, reproduction and passing years. Select a trait to see exact before/after effects, then confirm if you want it.</p><p><b>Population:</b> Well-fed adults find mates and reproduce automatically. Later, mind level 2 + social level 2 + hands level 1 + 12 individuals unlock a tribe.</p><p><b>Controls:</b> WASD / arrows move, Space feeds or hunts, E opens Evolution, M shows map, P pauses. On phones, move left and act right.</p><p>You can return to this guide anytime with <b>? HELP</b>.</p>`,[{label:'RETURN TO GAME',primary:true},{label:'OPEN EVOLUTION',run:showEvolutionPanel}])}
+function showChronicle(){if(!G)return;openDialogue('CHRONICLE OF '+planetName().toUpperCase(),'The world advances even when you do not command it. Here are the events that shaped your lineage.');
+ $('dialogExtra').innerHTML=`<div class="scroll" style="max-height:45vh;overflow:auto">${G.history.map(e=>`<div class="historyEntry"><em>Year ${e.year} · ${escapeHtml(e.title)}</em><br>${escapeHtml(e.text)}</div>`).join('')}</div>`}
+function showEcology(){if(!G)return;openDialogue('THE LIVING WEB','Births, deaths, nourishment, climate, and chance interact. Population changes are consequences of these systems, not predetermined chapters.');
+ const counts=[['Your lineage',G.population,'#d9d0a2'],['Shellbacks',population('shell'),'#99ba94'],['Glimmerlings',population('glimmer'),'#a5e2c0'],['Duskstalkers',population('stalker'),'#de8b91'],['Sporewings',population('moth'),'#adacd3']];
+ $('dialogExtra').innerHTML=`<div class="codexGrid">${counts.map(([name,n,color])=>`<div class="codexCard"><b style="color:${color}">${name}</b><p>${n} living individuals</p></div>`).join('')}</div><div class="sectionLine"><b>Recorded population</b><span>Years elapsed: ${Math.floor(G.year)}</span></div><canvas id="populationChart" width="560" height="170" class="miniMap"></canvas><div class="smallInfo">${G.incident?'Current upheaval: '+G.incident.type+'. ':'Currently no major catastrophe. '}Temperature ${Math.round(G.temp)}°C. Different habitats and diets respond differently to scarce food.</div>`;
+ const c=$('populationChart'),g=c.getContext('2d');const series=G.stats.length>1?G.stats:[{player:G.population,prey:population('glimmer')+population('shell'),hunters:population('stalker')},{player:G.population,prey:population('glimmer')+population('shell'),hunters:population('stalker')}];
+ const max=Math.max(20,...series.flatMap(s=>[s.player,s.prey,s.hunters]))*1.22;g.clearRect(0,0,c.width,c.height);g.strokeStyle='#3b6565';g.lineWidth=1;
+ for(let i=1;i<4;i++){g.beginPath();g.moveTo(15,165*i/4);g.lineTo(548,165*i/4);g.stroke()}
+ for(let [key,col]of [['player','#f1d7a1'],['prey','#a6dbb0'],['hunters','#e4958e']]){g.strokeStyle=col;g.lineWidth=3;g.beginPath();series.forEach((s,i)=>{let x=15+i/(series.length-1)*530,y=160-(s[key]||0)/max*151;i?g.lineTo(x,y):g.moveTo(x,y)});g.stroke()}
+}
+function showMap(){if(!G)return;openDialogue('MAP OF '+planetName().toUpperCase(),'One world, multiple habitats. The life here is simulated in a simplified ecosystem; other planetary systems are planned for future chapters.');
+ $('dialogExtra').innerHTML='<canvas id="mapLarge" class="miniMap" width="610" height="360" style="height:auto;max-height:50vh"></canvas><p>▣ Gold: your current creature · ◈ Amber: the first settlement · Blue: water habitats</p>';
+ const c=$('mapLarge'),g=c.getContext('2d');g.drawImage(mapCanvas,0,0,W,H,0,0,c.width,c.height);let p=controlled();if(p){g.fillStyle='#ffe6a9';g.beginPath();g.arc(p.x/W*c.width,p.y/H*c.height,7,0,TAU);g.fill();g.strokeStyle='#102932';g.lineWidth=2;g.stroke()}
+ if(G.tribe){g.fillStyle='#e8b989';g.beginPath();g.arc(G.tribe.x/W*c.width,G.tribe.y/H*c.height,8,0,TAU);g.fill()}
+}
+function showCodex(){if(!G)return;openDialogue('FIELD NOTES · '+planetName().toUpperCase(),'Life is not trying to become human. It adapts to the opportunities and hazards of its environment. Your lineage is only one possible outcome.');
+ $('dialogExtra').innerHTML=`<div class="codexGrid"><div class="codexCard"><b>🌿 Nutrient foragers</b><p>Seek patches of plants and reproduce when nourished. Especially vulnerable to hungry predators.</p></div><div class="codexCard"><b>🦷 Duskstalkers</b><p>Hunt smaller animals and force herds to move. They may decline when prey populations collapse.</p></div><div class="codexCard"><b>☀️ Sunborn lineages</b><p>Use warmth and light as nourishment. Ashfall and cold weather can devastate these organisms.</p></div><div class="codexCard"><b>🍄 Fungal symbiotes</b><p>Get nutrients from woodland partners. Their survival depends on a suitable forest habitat.</p></div><div class="codexCard"><b>✧ Intelligence</b><p>Not an automatic achievement. It requires evolutionary investment and enough surviving descendants.</p></div><div class="codexCard"><b>⌂ Civilizations</b><p>Communal storage, learning, and environmental change can create a path beyond individual survival.</p></div></div>`}
+function showMenu(){if(!G)return;openDialogue('YOUR LIVING WORLD',`<b>${planetName()} · Year ${Math.floor(G.year)}</b><br>${pathData[G.path].name} lineage, ${G.population} survivors, ${G.era==='tribe'?'a developing civilization':'still in the struggle to survive'}.<br><br>Game controls: WASD / arrows to move; Space to eat or hunt; E for evolution or tribe; F to interact; M for map; P to pause.`);
+ const btn=$('dialogBtns');const items=[['Resume',closeDialogue],['Help and controls',showHelp],['World history',showChronicle],['Living ecosystem',showEcology],['Field guide',showCodex],['World map',showMap],['Save game',()=>saveGame(true)],['Export world file',exportSave],['Import world file',importSave],['Install game',installGame],['Start a new world',()=>{closeDialogue();confirmRestart()}]];
+ btn.innerHTML='';for(let [label,fn]of items){let el=document.createElement('button');el.textContent=label;el.onclick=()=>{if(fn===saveGame){closeDialogue();saveGame(true)}else if(fn===installGame){closeDialogue();installGame()}else if(fn!==closeDialogue){closeDialogue();fn()}else fn()};if(label==='Resume')el.className='primary';btn.appendChild(el)}
+}
+function confirmRestart(){openDialogue('BEGIN A NEW UNIVERSE?','Starting again replaces the current device autosave. The current autosave will be replaced. You can first export a copy from the world menu.',[{label:'Keep this world',primary:true},{label:'Create new world',run:()=>{G=null;endReached=false;paused=false;localStorage.removeItem(SAVEKEY);$('screen').classList.remove('hidden');for(let id of ['hudTop','objective','side','bottom','touch','log','mapButton','rightToggle'])$(id).classList.add('hidden');$('continueBtn').classList.add('hidden');drawHero()}}])}
+function showFinal(){openDialogue('THE FIRST STARLIGHT',`<div style="font-size:26px;color:#e7d6a5;margin:15px 0">✦ THE FIRST DAWN IS COMPLETE ✦</div><b>${pathData[G.path].name} civilization · Year ${Math.floor(G.year)}</b><br><br>Generations ago, your species struggled to find a meal. Now descendants preserve ideas in writing and have built a place to study the sky.<br><br>The universe is still larger than their understanding. The stars are not destinations yet—but they have become questions.<br><br><span style="color:var(--aqua)">You can continue observing your ecosystem and settlement. Interstellar travel is not part of this first playable chapter.</span>`,[{label:'Continue this world',primary:true,run:()=>{G.screenEnd=false;paused=false;saveGame()}},{label:'Begin a new world',run:confirmRestart}]);}
+function isTouchLayout(){return innerWidth<=650||(innerHeight<=520&&matchMedia('(pointer:coarse)').matches)}
+function hideSide(){sideVisible=false;$('side').classList.remove('open');if(!isTouchLayout())$('side').classList.add('hidden')}
+function toggleSide(){if(isTouchLayout()){$('side').classList.toggle('open');sideVisible=$('side').classList.contains('open')}else{$('side').classList.toggle('hidden');sideVisible=!$('side').classList.contains('hidden')}}
+function changeMode(x){if(!G)return;mode=x;if(x==='creature'&&controlled()){cam.x=controlled().x;cam.y=controlled().y}refreshHUD();toast(x==='creature'?'Following your living ancestor.':'Observer perspective · Move with WASD to pan the world.')}
+async function installGame(){if(deferredInstall){deferredInstall.prompt();const result=await deferredInstall.userChoice;if(result?.outcome==='accepted')toast('Installation accepted. Look for Genesis on your home screen.');deferredInstall=null;return}
+ openDialogue('INSTALL GENESIS ON YOUR PHONE','<b>Android / Chrome:</b> Open the published game using Chrome, open the ⋮ menu, and choose <b>Install app</b> or <b>Add to Home screen</b>.<br><br><b>iPhone / Safari:</b> Tap the Share icon, then <b>Add to Home Screen</b>.<br><br>The full ZIP must be uploaded to a secure GitHub Pages site for proper offline installation. Opening index.html directly from your Downloads folder does not install a PWA.');}
+function tickSpeed(){if(!G)return;if(G.meals<1||G.geneBought<1){toast('First find food and evolve one trait. Faster time unlocks after the basics.');return}const s=[1,4,12];G.speed=s[(s.indexOf(G.speed||1)+1)%s.length];refreshHUD();toast('Simulation speed · <b>'+G.speed+'×</b>')}
+function togglePause(){if(!G)return;paused=!paused;refreshHUD()}
+function quickReset(){keys={};joy={x:0,y:0};$('knob').style.transform='translate(0px,0px)'}
+// Browser and mobile input
+window.addEventListener('keydown',e=>{if(['ArrowUp','ArrowDown','ArrowLeft','ArrowRight','Space'].includes(e.code))e.preventDefault();if(!G||!$('screen').classList.contains('hidden'))return;if(dialogOpen){if(e.code==='Escape')closeDialogue();return}
+ keys[e.code]=true;
+ if(e.repeat)return;
+ if(e.code==='Space'){act();G.lastAction=performance.now()}else if(e.code==='KeyF')interact();else if(e.code==='KeyE')toggleSide();else if(e.code==='KeyM')showMap();else if(e.code==='KeyP')togglePause();else if(e.code==='KeyC')showChronicle();else if(e.code==='KeyH')showHelp();else if(e.code==='Escape')showMenu();else if(e.code==='Digit1')changeMode('creature');else if(e.code==='Digit2')changeMode('observer')});
+window.addEventListener('keyup',e=>delete keys[e.code]);window.addEventListener('blur',quickReset);
+const joyEl=$('joystick'),knob=$('knob');let joyPointer=null;
+function moveJoy(e){if(joyPointer!==e.pointerId)return;const r=joyEl.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2,dx=e.clientX-cx,dy=e.clientY-cy,d=Math.hypot(dx,dy),scale=Math.min(1,d/(r.width*.34));joy.x=d?dx/d*scale:0;joy.y=d?dy/d*scale:0;knob.style.transform=`translate(${joy.x*r.width*.27}px,${joy.y*r.width*.27}px)`}
+joyEl.addEventListener('pointerdown',e=>{e.preventDefault();joyPointer=e.pointerId;joyEl.setPointerCapture(e.pointerId);moveJoy(e)});joyEl.addEventListener('pointermove',moveJoy);function endJoy(e){if(e.pointerId!==joyPointer)return;joyPointer=null;joy.x=joy.y=0;knob.style.transform='translate(0,0)'}joyEl.addEventListener('pointerup',endJoy);joyEl.addEventListener('pointercancel',endJoy);
+$('touchEat').addEventListener('pointerdown',e=>{e.preventDefault();act();mobileActionHeld=false;G.lastAction=performance.now();$('touchEat').classList.add('pressed')});for(const ev of ['pointerup','pointercancel','pointerleave'])$('touchEat').addEventListener(ev,()=>{$('touchEat').classList.remove('pressed');mobileActionHeld=false});
+$('touchInteract').onclick=interact;$('touchEvolve').onclick=toggleSide;$('touchObserve').onclick=()=>changeMode(mode==='creature'?'observer':'creature');
+$('helpBtn').onclick=showHelp;$('pauseBtn').onclick=togglePause;$('speedBtn').onclick=tickSpeed;$('saveBtn').onclick=()=>saveGame(true);$('menuBtn').onclick=showMenu;
+$('sideClose').onclick=hideSide;$('rightToggle').onclick=toggleSide;$('mapButton').onclick=showMap;
+$('objectiveToggle').onclick=()=>{$('objective').classList.toggle('collapsed');$('objectiveToggle').textContent=$('objective').classList.contains('collapsed')?'⌄':'⌃'};
+$('creatureMode').onclick=()=>changeMode('creature');$('observerMode').onclick=()=>changeMode('observer');
+$('startChoices').addEventListener('click',e=>{let b=e.target.closest('[data-path]');if(!b)return;startPath=b.dataset.path;$('startChoices').querySelectorAll('button').forEach(x=>x.classList.toggle('chosen',x===b));const f=firstSteps[startPath];$('pathDescription').innerHTML=`<b>${f.name}:</b> ${f.text} <span style="color:#f4d8aa">${f.tip}</span>`});
+$('startBtn').onclick=()=>{let seed=$('seed').value.trim()||'AURORA-7',climate=$('climate').value;genesisWorld(seed,climate,startPath,$('past').value);showIntro()};
+$('continueBtn').onclick=()=>{if(loadGame()){toast('Welcome back to your living world.');$('screen').classList.add('hidden');if(G.screenEnd){G.screenEnd=false;endReached=true;}if(!G.lessonFlags?.welcome)showIntro();}};
+$('installStart').onclick=installGame;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;$('installStart').classList.remove('hidden')});
+window.addEventListener('appinstalled',()=>{deferredInstall=null;toast('Genesis is installed on this device.')});
+cv.addEventListener('wheel',e=>{if(!G)return;e.preventDefault();cam.zoom=clamp(cam.zoom+(e.deltaY>0?-.12:.12),.55,2.4)},{passive:false});
+cv.addEventListener('pointerdown',e=>{if(!G||dialogOpen)return;if(mode==='observer'){
+ let x=(e.clientX-dims.w/2)/cam.zoom+cam.x,y=(e.clientY-dims.h/2)/cam.zoom+cam.y;cam.x=clamp(x,0,W);cam.y=clamp(y,0,H)}
+});
+window.addEventListener('beforeunload',()=>saveGame(false));
+function init(){resize();drawHero();try{if(localStorage.getItem(SAVEKEY))$('continueBtn').classList.remove('hidden')}catch{}requestAnimationFrame(render);if('serviceWorker'in navigator&&location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});}
+init();
+</script>
+</body>
+</html>
