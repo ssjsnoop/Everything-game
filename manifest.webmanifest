@@ -1,0 +1,16 @@
+{
+  "name": "Genesis to the Stars — The First Dawn",
+  "short_name": "Genesis",
+  "description": "Guide a species from survival to the first dawn of civilization in a living world.",
+  "id": "./index.html",
+  "start_url": "./index.html",
+  "scope": "./",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#071217",
+  "theme_color": "#101e23",
+  "icons": [
+    {"src": "./icons/icon-192.png", "type": "image/png", "sizes": "192x192", "purpose": "any maskable"},
+    {"src": "./icons/icon-512.png", "type": "image/png", "sizes": "512x512", "purpose": "any maskable"}
+  ]
+}
